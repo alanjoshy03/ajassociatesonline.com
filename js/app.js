@@ -54,6 +54,44 @@
     $$('.rv').forEach(function (el) { el.classList.add('in'); });
   }
 
+  /* ---- fit-to-screen: shrink five sections proportionally so each fills one screen ---- */
+  var FIT = ['home', 'packages', 'team', 'partnership', 'contact'].map(function (id) { return document.getElementById(id); }).filter(Boolean);
+  var fitMq = window.matchMedia('(min-width:900px) and (min-aspect-ratio:6/5)');
+  var canZoom = 'zoom' in document.documentElement.style;
+  function fitAll() {
+    var avail = window.innerHeight - hdr.offsetHeight;
+    FIT.forEach(function (s) {
+      if (!fitMq.matches || !canZoom) {
+        s.classList.remove('fit'); s.style.zoom = ''; s.style.minHeight = ''; s.style.removeProperty('--z'); return;
+      }
+      s.classList.add('fit');
+      s.style.zoom = 1; s.style.setProperty('--z', 1); s.style.minHeight = '0px';      // measure natural height
+      var h = s.getBoundingClientRect().height;
+      var z = Math.max(0.55, Math.min(1, (avail - 2) / h * 0.985));
+      s.style.minHeight = '';
+      s.style.setProperty('--z', z.toFixed(3)); s.style.zoom = z.toFixed(3);
+    });
+  }
+  var fitTimer = 0;
+  function queueFit() { clearTimeout(fitTimer); fitTimer = setTimeout(fitAll, 60); }
+  window.addEventListener('resize', queueFit);
+  if (fitMq.addEventListener) fitMq.addEventListener('change', queueFit);
+  window.addEventListener('load', fitAll);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll);
+  fitAll();
+
+  /* ---- services accordion: opening one closes the open one above it, which would yank the page
+          upward. Pin the clicked header in place so its panel visibly opens downward. ---- */
+  $$('.acc summary').forEach(function (sm) {
+    sm.addEventListener('click', function () {
+      var before = sm.getBoundingClientRect().top;
+      setTimeout(function () {
+        var delta = sm.getBoundingClientRect().top - before;
+        if (Math.abs(delta) > 1) window.scrollBy({ top: delta, left: 0, behavior: 'instant' });
+      }, 0);
+    });
+  });
+
   /* ---- package finder ---- */
   var PK = {
     individual: ['Individual & NRI Tax Filing', 'Personal tax scope', [
