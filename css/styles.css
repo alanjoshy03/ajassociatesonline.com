@@ -531,6 +531,7 @@ h1.h2 { letter-spacing: -.02em; }
   .dd.open .mega, .dd.open .menu { display: block; padding: 0 0 .8rem 1rem; }
   .mega-intro, .mega-detail { display: none; }
   .nav.open .mega a, .nav.open .menu a { padding: .6rem 0; font-size: .95rem; border-bottom: 0; }
+  .nav.open .menu a { display: block; padding-left: 1.45rem; }
   .mega-list li a .i { display: none; }
 }
 
@@ -1061,4 +1062,10 @@ h1.h2 { letter-spacing: -.02em; }
 /* beta marker (set BETA = False in tools/build.py to remove it) */
 .brand b .beta-tag { position: relative; top: -.2em; margin-left: .45rem; font: italic 500 .95rem/1 var(--serif); letter-spacing: 0; text-transform: none; color: var(--brass-ink); vertical-align: baseline; }
 .beta-note { margin: 1.2rem 0 0; padding-right: 4.5rem; font-size: .76rem; color: rgba(246, 242, 234, .45); }
+.sx-item.sx-anim .sx-panel { overflow: hidden; }
+
+/* content protection: nothing on the page can be selected or dragged (form fields still work) */
+html { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+input, textarea, select, [contenteditable="true"] { -webkit-user-select: text; user-select: text; }
+img, svg, a, button { -webkit-user-drag: none; user-drag: none; }
 

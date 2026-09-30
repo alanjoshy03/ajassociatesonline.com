@@ -93,6 +93,10 @@ Home is in `tools/partials/band.html`, and a copy is in the hidden search data n
 **Remove the "Beta" marker when the site is final.** In `tools/build.py`, change `BETA = True` to `BETA = False`, rebuild
 and upload. The small "Beta" tag in the navbar and the note in the footer disappear.
 
+**Turn off the no-copy / no-select protection.** Text, images and links cannot be selected, copied or dragged. To remove
+it, delete the block commented "content protection" in `css/styles.css` and in `js/app.js`, then raise `V`, rebuild and
+upload. Form fields always stay editable.
+
 ## Things that need attention once a year
 
 - The tax estimate rates (after the Budget).

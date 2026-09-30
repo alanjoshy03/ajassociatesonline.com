@@ -22,6 +22,12 @@
     setTimeout(spHide, 3500);
   }
 
+  /* ---- content protection: no selecting, copying, dragging or right-click menu (typing in form fields is untouched) ---- */
+  var inField = function (t) { return t && t.closest && t.closest('input, textarea, select, [contenteditable="true"]'); };
+  ['selectstart', 'dragstart', 'copy', 'cut', 'contextmenu'].forEach(function (ev) {
+    document.addEventListener(ev, function (e) { if (!inField(e.target)) e.preventDefault(); });
+  });
+
   var yr = $('#yr'); if (yr) yr.textContent = new Date().getFullYear();
 
   $$('[data-reload]').forEach(function (b) { b.addEventListener('click', function () { window.location.reload(); }); });
@@ -150,11 +156,53 @@
       r.addEventListener('click', function (e) {
         if (sxDesk.matches) return;                       // on desktop the row is a normal link
         e.preventDefault();
-        var before = r.getBoundingClientRect().top;
-        sxOpen(sxItems[i].classList.contains('on') ? -1 : i);
-        window.scrollBy(0, r.getBoundingClientRect().top - before);   // keep the tapped row where the finger is
+        sxToggle(i);
       });
     });
+
+    /* phones: rows open and close smoothly, the tapped row stays under the finger while others collapse,
+       and once open the page glides just far enough to show the whole answer */
+    var sxBusy = false, sxDur = 360, sxEase = 'cubic-bezier(.4, 0, .2, 1)';
+    var sxStill = lite || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+    var sxToggle = function (i) {
+      var li = sxItems[i], row = sxRows[i], wasOn = li.classList.contains('on');
+      var startTop = row.getBoundingClientRect().top;
+      if (sxStill || !li.animate) {
+        sxOpen(wasOn ? -1 : i);
+        window.scrollBy({ top: row.getBoundingClientRect().top - startTop, left: 0, behavior: 'instant' });
+        return;
+      }
+      if (sxBusy) return;
+      sxBusy = true;
+      var done = 0, total = 0, following = true;
+      var finish = function () { if (++done < total) return; following = false; sxBusy = false; sxReveal(li, row, wasOn); };
+      var run = function (item, opening) {
+        var panel = $('.sx-panel', item); total++;
+        item.classList.add('on', 'sx-anim');
+        var full = panel.offsetHeight;
+        var a = panel.animate(opening ? [{ height: '0px' }, { height: full + 'px' }] : [{ height: full + 'px' }, { height: '0px' }], { duration: sxDur, easing: sxEase });
+        a.onfinish = a.oncancel = function () { item.classList.remove('sx-anim'); if (!opening) item.classList.remove('on'); finish(); };
+      };
+      sxItems.forEach(function (x, k) {
+        var on = x.classList.contains('on');
+        sxRows[k].setAttribute('aria-expanded', k === i && !wasOn ? 'true' : 'false');
+        if (k === i) { run(x, !wasOn); } else if (on) { run(x, false); }
+      });
+      var t0 = performance.now();
+      (function follow() {                               // keep the tapped row where it was while rows above shrink
+        var d = row.getBoundingClientRect().top - startTop;
+        if (Math.abs(d) > .5) window.scrollBy({ top: d, left: 0, behavior: 'instant' });
+        if (following) requestAnimationFrame(follow);
+      })();
+    };
+    var sxReveal = function (li, row, wasOn) {
+      if (wasOn) return;
+      var hdrH = ($('#hdr') ? $('#hdr').offsetHeight : 56) + 14;
+      var rr = row.getBoundingClientRect(), pr = $('.sx-panel', li).getBoundingClientRect(), y = window.pageYOffset, to = y;
+      if (rr.top < hdrH) to = y + rr.top - hdrH;                                        // row is tucked under the header
+      else if (pr.bottom > window.innerHeight - 14) to = y + Math.min(pr.bottom - (window.innerHeight - 14), rr.top - hdrH);   // answer runs off the bottom
+      if (Math.abs(to - y) > 2) window.scrollTo({ top: to, behavior: 'smooth' });
+    };
   }
 
   /* ---- business-structure quiz ---- */
