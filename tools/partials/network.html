@@ -1,0 +1,34 @@
+<section class="network on-dark" id="partnership">
+  <div class="wrap net-grid">
+    <div class="rv">
+      <p class="eyebrow">Collab with us</p>
+      <h2 style="margin:1rem 0 1.2rem">Referrals &amp; <em>collaborations.</em></h2>
+      <p class="lead" style="margin-bottom:2rem">We work with banks, fintech platforms, legal practitioners and corporate advisors to deliver joint tax, audit and capital advisory across Kerala and India.</p>
+      <ul class="net-rows">
+        <li><span class="no">01</span><div><h3>Banks &amp; financial institutions</h3><p>Commercial loans, OD/CC limits and bank CMA data preparation.</p></div></li>
+        <li><span class="no">02</span><div><h3>Software &amp; fintech platforms</h3><p>Automated tax filing and accounting system integration.</p></div></li>
+        <li><span class="no">03</span><div><h3>Legal practices &amp; advocates</h3><p>Scrutiny defence and legal compliance support.</p></div></li>
+        <li><span class="no">04</span><div><h3>Corporate consultants</h3><p>Entity formation, secretarial audits and ROC filings.</p></div></li>
+      </ul>
+    </div>
+    <form class="pform rv" id="pform" novalidate>
+      <h3>Propose a collaboration</h3>
+      <p>Tell us about your firm. This opens an email to our partner desk.</p>
+      <div class="f">
+        <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="f2">
+          <div><label for="p-firm">Firm name *</label><input id="p-firm" name="firm" required autocomplete="organization"></div>
+          <div><label for="p-cat">Category *</label>
+            <select id="p-cat" name="cat" required><option value="">Select…</option><option>Banking / NBFC</option><option>Fintech &amp; software</option><option>Legal practice</option><option>Corporate service provider</option></select></div>
+        </div>
+        <div class="f2">
+          <div><label for="p-mail">Email *</label><input id="p-mail" name="mail" type="email" required autocomplete="email"></div>
+          <div><label for="p-tel">Mobile *</label><input id="p-tel" name="tel" type="tel" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" required autocomplete="tel-national"></div>
+        </div>
+        <div><label for="p-note">How can we collaborate? *</label><textarea id="p-note" name="note" required></textarea></div>
+        <button class="btn btn-brass" type="submit">Send proposal <svg class="i"><use href="#i-arrow"/></svg></button>
+        <p class="msg" role="status"></p>
+      </div>
+    </form>
+  </div>
+</section>

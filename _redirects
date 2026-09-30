@@ -1,0 +1,48 @@
+# ---- One address only: ajassociatesonline.com --------------------------------------------
+# (Also set ajassociatesonline.com as the PRIMARY domain in Netlify > Domain management, so the
+#  free *.netlify.app address redirects here too.)
+http://www.ajassociatesonline.com/*   https://ajassociatesonline.com/:splat   301!
+https://www.ajassociatesonline.com/*  https://ajassociatesonline.com/:splat   301!
+http://ajassociatesonline.com/*       https://ajassociatesonline.com/:splat   301!
+
+# Home is the bare domain, never /index.html
+/index.html   /   301!
+
+# A trailing slash (/about/) is tidied to /about so styles and images always load
+/services/ /services 301!
+/service-taxation/ /service-taxation 301!
+/service-company-formation/ /service-company-formation 301!
+/service-financial-management/ /service-financial-management 301!
+/service-corporate-secretarial/ /service-corporate-secretarial 301!
+/service-lending-capital/ /service-lending-capital 301!
+/service-business-strategy/ /service-business-strategy 301!
+/service-staffing-support/ /service-staffing-support 301!
+/packages/ /packages 301!
+/about/ /about 301!
+/collab/ /collab 301!
+/careers/ /careers 301!
+/contact/ /contact 301!
+
+# Clean addresses work too (typed or shared) and the address bar stays exactly as typed
+/services                         /services.html                            200
+/service-taxation                 /service-taxation.html                    200
+/service-company-formation        /service-company-formation.html           200
+/service-financial-management     /service-financial-management.html        200
+/service-corporate-secretarial    /service-corporate-secretarial.html       200
+/service-lending-capital          /service-lending-capital.html             200
+/service-business-strategy        /service-business-strategy.html           200
+/service-staffing-support         /service-staffing-support.html            200
+/packages                         /packages.html                            200
+/about                            /about.html                               200
+/collab                           /collab.html                              200
+/careers                          /careers.html                             200
+/contact                          /contact.html                             200
+
+# Source folders and config are never public
+/tools/*        /404.html   404!
+/_legacy/*      /404.html   404!
+/netlify.toml   /404.html   404!
+/.gitignore     /404.html   404!
+/_redirects     /404.html   404!
+
+# Anything else that doesn't exist shows /404.html automatically (Netlify serves it at the same address)
