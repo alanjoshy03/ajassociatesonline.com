@@ -54,22 +54,38 @@
     $$('.rv').forEach(function (el) { el.classList.add('in'); });
   }
 
-  /* ---- fit-to-screen: shrink five sections proportionally so each fills one screen ---- */
+  /* ---- fit-to-screen: shrink five sections proportionally so each fills one screen ----
+     Whitespace is part of the budget: every section keeps PT/PB of padding inside the screen,
+     plus the height of any slanted edge that overlaps it, plus a GAP below the fold that
+     separates it from the next section while scrolling. ---- */
   var FIT = ['home', 'packages', 'team', 'partnership', 'contact'].map(function (id) { return document.getElementById(id); }).filter(Boolean);
   var fitMq = window.matchMedia('(min-width:900px) and (min-aspect-ratio:6/5)');
   var canZoom = 'zoom' in document.documentElement.style;
+  var PT = 48, PB = 36, GAP = 72;
   function fitAll() {
     var avail = window.innerHeight - hdr.offsetHeight;
+    var cut = Math.min(68, Math.max(22, window.innerWidth * 0.042));           // = --cut in px
     FIT.forEach(function (s) {
       if (!fitMq.matches || !canZoom) {
-        s.classList.remove('fit'); s.style.zoom = ''; s.style.minHeight = ''; s.style.removeProperty('--z'); return;
+        s.classList.remove('fit');
+        s.style.zoom = ''; s.style.minHeight = ''; s.style.paddingTop = ''; s.style.paddingBottom = ''; s.style.removeProperty('--z');
+        return;
       }
       s.classList.add('fit');
-      s.style.zoom = 1; s.style.setProperty('--z', 1); s.style.minHeight = '0px';      // measure natural height
-      var h = s.getBoundingClientRect().height;
-      var z = Math.max(0.55, Math.min(1, (avail - 2) / h * 0.985));
-      s.style.minHeight = '';
-      s.style.setProperty('--z', z.toFixed(3)); s.style.zoom = z.toFixed(3);
+      var id = s.id;
+      var topCut = id === 'packages' ? cut : 0;                                 // slanted edge of the section above overlaps us
+      var slant = id === 'partnership' ? cut : 0;                               // our own slanted top edge (scales with zoom)
+      var botCut = id === 'home' ? cut : 0;                                     // the stats band overlaps our bottom
+      var gap = id === 'home' ? 0 : GAP;
+      s.style.zoom = 1; s.style.minHeight = '0px'; s.style.paddingTop = '0px'; s.style.paddingBottom = '0px';
+      var nat = s.getBoundingClientRect().height;                               // content-only height
+      var budget = avail - PT - PB - topCut - botCut - slant * 0.85;
+      var z = Math.max(0.55, Math.min(1, budget / nat * 0.985));
+      s.style.setProperty('--z', z.toFixed(3));
+      s.style.zoom = z.toFixed(3);
+      s.style.paddingTop = ((PT + topCut) / z + slant) + 'px';
+      s.style.paddingBottom = ((PB + botCut + gap) / z) + 'px';
+      s.style.minHeight = ((avail + gap) / z) + 'px';
     });
   }
   var fitTimer = 0;
@@ -80,15 +96,17 @@
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll);
   fitAll();
 
-  /* ---- services accordion: opening one closes the open one above it, which would yank the page
-          upward. Pin the clicked header in place so its panel visibly opens downward. ---- */
+  /* ---- services accordion: opening one closes the open one above it, which would shove the page
+          upward. Doing the correction a tick later shows as a flash, so do it all in one synchronous
+          step: toggle, measure how far the clicked header moved, scroll back by that much, then paint. ---- */
   $$('.acc summary').forEach(function (sm) {
-    sm.addEventListener('click', function () {
-      var before = sm.getBoundingClientRect().top;
-      setTimeout(function () {
-        var delta = sm.getBoundingClientRect().top - before;
-        if (Math.abs(delta) > 1) window.scrollBy({ top: delta, left: 0, behavior: 'instant' });
-      }, 0);
+    sm.addEventListener('click', function (e) {
+      e.preventDefault();
+      var d = sm.parentNode, before = sm.getBoundingClientRect().top;
+      if (d.open) { d.open = false; }
+      else { $$('.acc details[open]').forEach(function (o) { o.open = false; }); d.open = true; }
+      var delta = sm.getBoundingClientRect().top - before;
+      if (Math.abs(delta) > 0.5) window.scrollBy({ top: delta, left: 0, behavior: 'instant' });
     });
   });
 
@@ -133,7 +151,7 @@
     });
     var label = function (n) { return form.querySelector('input[name="' + n + '"]:checked + span').textContent; };
     $('#r-wa').href = 'https://wa.me/' + WA + '?text=' + encodeURIComponent(
-      'Greetings AJ Associates! I used your scope finder — business: ' + label('entity') +
+      'Greetings AJ Associates! I used the Packages section — business: ' + label('entity') +
       ', turnover: ' + label('turnover') + '. I would like a quote for the "' + p[0] + '".');
   }
   form.addEventListener('change', renderFinder);
@@ -163,14 +181,5 @@
     window.location.href = 'mailto:info@ajassociatesonline.com?subject=' +
       encodeURIComponent('Collaboration proposal — ' + f.firm.value.trim()) + '&body=' + encodeURIComponent(body);
     $('.msg', pf).textContent = 'Opening your email app. If nothing opens, write to info@ajassociatesonline.com.';
-  });
-
-  /* ---- map: load the heavy iframe only on request ---- */
-  var mb = $('#map-load');
-  if (mb) mb.addEventListener('click', function () {
-    var i = document.createElement('iframe');
-    i.title = 'AJ Associates office map'; i.loading = 'lazy'; i.referrerPolicy = 'no-referrer-when-downgrade';
-    i.src = 'https://maps.google.com/maps?q=A+J+Associates,+10/1329+G,+Bivera,+Chullickal+Road,+Kochi,+Kerala&z=15&output=embed';
-    $('#map').appendChild(i);
   });
 })();

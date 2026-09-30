@@ -180,12 +180,12 @@ h2 { font-size: clamp(1.95rem, 4.3vw, 3rem); }
 /* outline illustrations: single-colour line art, sits straight on the paper */
 .art { margin: 0; }
 .art img { width: 100%; height: auto; display: block; }
-.art-side { margin-top: 3.5rem; max-width: 300px; }
+.art-side { margin-top: 3rem; max-width: 26rem; }
 .contact-head { display: grid; gap: 2rem; }
 .contact-head .sec-head { margin-bottom: 0; }
 .contact-head { margin-bottom: clamp(3.5rem, 8vw, 6.5rem); }
 .art-talk { display: none; }
-@media (min-width: 900px) { .contact-head { grid-template-columns: 1.1fr .9fr; align-items: end; } .art-talk { display: block; max-width: 400px; justify-self: end; } }
+@media (min-width: 900px) { .contact-head { grid-template-columns: 1.1fr .9fr; align-items: end; } .art-talk { display: block; max-width: 26rem; justify-self: end; } }
 @media (max-width: 899px) { .art-side { display: none; } }
 
 /* ---------- services ---------- */
@@ -193,6 +193,8 @@ h2 { font-size: clamp(1.95rem, 4.3vw, 3rem); }
 .svc-grid { display: grid; gap: 3.5rem; }
 .svc-side p { color: var(--ink-2); margin: 0 0 2rem; max-width: 28rem; }
 .acc { overflow-anchor: none; }
+.acc details[open] .pn { animation: pn-in .28s ease both; }
+@keyframes pn-in { from { opacity: 0; } to { opacity: 1; } }
 .acc details { border-top: 1px solid var(--ink); background: transparent; }
 .acc details:last-child { border-bottom: 1px solid var(--ink); }
 .acc summary { list-style: none; display: grid; grid-template-columns: 2.6rem 1fr 1.6rem; gap: .6rem; align-items: center; padding: 1.75rem .2rem; cursor: pointer; }
@@ -242,7 +244,7 @@ legend { font: 700 .74rem/1.2 var(--sans); letter-spacing: .14em; text-transform
 .chip input:checked + span { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .chip input:focus-visible + span { outline: 3px solid var(--brass); outline-offset: 2px; }
 .note { font-size: .84rem; color: var(--muted); max-width: 26rem; }
-.finder-grid .art-side { margin-top: 3rem; max-width: 280px; }
+.finder-grid .art-side { margin-top: 2.4rem; max-width: 22rem; }
 .result { background: var(--ink); color: var(--paper); padding: 2.6rem 2rem; border-radius: 4px; position: relative; box-shadow: -12px 12px 0 var(--brass); margin-left: 12px; }
 .result .pill { display: inline-block; font: 700 .64rem/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; background: var(--brass); color: var(--ink); padding: .4rem .7rem; }
 .result h3 { font-size: clamp(1.5rem, 3vw, 2.05rem); margin: 1.4rem 0 1.8rem; }
@@ -323,9 +325,9 @@ blockquote { font: italic 500 clamp(1.25rem, 2.4vw, 1.65rem)/1.35 var(--serif); 
 .info dt { font-size: .72rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: var(--brass-ink); }
 .info dd { margin: .25rem 0 0; }
 .info dd small { display: block; color: var(--muted); font-size: .82rem; }
-.map { margin-top: 2.4rem; border: 1px solid var(--line); background: var(--paper-2); min-height: 240px; display: grid; place-items: center; text-align: center; padding: 1.4rem; position: relative; }
-.map p { font-size: .88rem; color: var(--muted); margin-bottom: .9rem; }
+.map { margin-top: 2.4rem; border: 1px solid var(--line); background: var(--paper-2); height: 15rem; position: relative; overflow: hidden; }
 .map iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.map-link { margin-top: 1rem; }
 @media (min-width: 900px) { .contact-grid { grid-template-columns: 7fr 5fr; gap: 8rem; } .contact .info { padding-top: 3rem; } .contact .f-wrap { padding: 3.2rem 3rem; } }
 
 /* ---------- footer ---------- */
@@ -394,20 +396,15 @@ blockquote { font: italic 500 clamp(1.25rem, 2.4vw, 1.65rem)/1.35 var(--serif); 
    The section is zoomed as a whole, so its layout is untouched and every size
    (type, icons, buttons, spacing, images) shrinks proportionally. */
 .fit { zoom: var(--z, 1); min-height: calc((100svh - var(--hdr)) / var(--z, 1)); display: flex; flex-direction: column; justify-content: center; }
-.fit.hero { padding-top: 3.2rem; padding-bottom: 3.2rem; }
-.fit.sec { padding-top: 3rem; padding-bottom: 3rem; }
-.fit.network { padding-top: calc(var(--cut) + 2.4rem); padding-bottom: 3.4rem; }
 .fit .sec-head { margin-bottom: 2.4rem; }
 /* vertical-spacing trims inside the fitted sections (placements unchanged) */
-.fit.sec { padding-top: 2.2rem !important; padding-bottom: 2.2rem !important; }
 .fit .sec-head { margin-bottom: 1.6rem; }
 .fit .sec-head h2 { margin: .8rem 0 .8rem; }
 /* home */
-.fit.hero { padding-top: 2.2rem; padding-bottom: 2.6rem; }
 .fit .hero-grid { gap: 3rem; }
 .fit.hero h1 { font-size: 4.1rem; margin: 1rem 0 1.1rem; }
 .fit.hero .lead { margin-bottom: 1.6rem; }
-.fit .fit .fit .ledger { padding: 1.6rem 1.5rem 1.2rem; }
+.fit .ledger { padding: 1.6rem 1.5rem 1.2rem; }
 .fit .ledger li { padding: .8rem 0; }
 .fit .ledger .fine { margin-top: .8rem; }
 /* scope finder */
@@ -416,7 +413,7 @@ blockquote { font: italic 500 clamp(1.25rem, 2.4vw, 1.65rem)/1.35 var(--serif); 
 .fit .chips { gap: .55rem; }
 .fit .chip span { padding: .62rem 1.1rem; }
 .fit .finder-grid { gap: 3rem; }
-.fit .finder-grid .art-side { margin-top: 1.2rem; max-width: 12rem; }
+.fit .finder-grid .art-side { margin-top: .4rem; max-width: 19rem; }
 .fit .result { padding: 1.8rem 1.7rem; margin-top: 1.5rem; }
 .fit .result h3 { margin: .9rem 0 .9rem; }
 .fit .result li { padding: .58rem 0; }
@@ -438,7 +435,7 @@ blockquote { font: italic 500 clamp(1.25rem, 2.4vw, 1.65rem)/1.35 var(--serif); 
 .fit .pform > p { margin-bottom: 1.1rem; }
 /* contact */
 .fit .contact-head { margin-bottom: 1.6rem; }
-.fit .art-talk { max-width: 240px; }
+.fit .art-talk { max-width: 20rem; margin-top: -1.6rem; }
 .fit .contact-grid { gap: 3.5rem; }
 .fit.contact .f-wrap, .fit .contact .f-wrap { padding: 1.9rem 2rem; }
 .fit .f { gap: .95rem; }
@@ -447,9 +444,8 @@ blockquote { font: italic 500 clamp(1.25rem, 2.4vw, 1.65rem)/1.35 var(--serif); 
 .fit .f-wrap > p { margin-bottom: 1rem; }
 .fit .contact .info { padding-top: .5rem; }
 .fit .info .row { padding: .9rem 0; }
-.fit .map { margin-top: 1.1rem; min-height: 120px; padding: 1rem; }
+.fit .map { margin-top: 1.1rem; height: 9.5rem; }
 /* second pass: keep Contact and Scope finder more readable */
-.fit .art-talk { max-width: 150px; }
 .fit .contact-head { margin-bottom: 1.1rem; }
 .fit .contact .sec-head p, .fit.contact .sec-head p { margin: 0; }
 .fit .f-wrap h3 { margin-bottom: .2rem; }
@@ -460,15 +456,14 @@ blockquote { font: italic 500 clamp(1.25rem, 2.4vw, 1.65rem)/1.35 var(--serif); 
 .fit .f-wrap { padding: 1.6rem 1.8rem !important; }
 .fit .msg { min-height: 0; }
 .fit .info .row { padding: .75rem 0; }
-.fit .map { min-height: 96px; margin-top: .9rem; padding: .8rem; }
-.fit .finder-grid .art-side { max-width: 8.5rem; margin-top: .8rem; }
+.fit .map { height: 9.5rem; margin-top: .9rem; }
+.fit .map-link { margin-top: .7rem; }
 .fit #finder .note { margin-top: 0; }
 .fit .sec-head p { margin-bottom: 0; }
 .fit .result li { padding: .5rem 0; }
 .fit .result { padding: 1.6rem 1.6rem; }
 
 /* home: breathing room above the slanted stats band */
-.fit.hero { padding-bottom: calc(var(--cut) + 2.4rem); }
 
 /* phones: the first screen is only the hero text + buttons; the monthly-rhythm card starts below the fold */
 @media (max-width: 899px) {
@@ -479,3 +474,4 @@ blockquote { font: italic 500 clamp(1.25rem, 2.4vw, 1.65rem)/1.35 var(--serif); 
   .hero .lead { font-size: 1.02rem; line-height: 1.65; margin-bottom: 1.8rem; }
   .hero .cta-row { gap: .7rem; }
 }
+#ask, #packages { padding-top: calc(var(--cut) + 7rem); }
