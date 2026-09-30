@@ -12,7 +12,7 @@ import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PART = os.path.join(ROOT, 'tools', 'partials')
-V = '16'   # bump to force browsers to re-download css/js after a change
+V = '32'   # bump to force browsers to re-download css/js after a change
 
 def part(name):
     with open(os.path.join(PART, name + '.html'), encoding='utf-8') as f:
@@ -241,7 +241,7 @@ CTA = f'''<section class="network on-dark cta-band" aria-labelledby="cta-h">
   <div class="wrap cta-in">
     <div class="rv">
       <p class="eyebrow">Let’s talk</p>
-      <h2 id="cta-h">Talk to a partner about <em>your numbers.</em></h2>
+      <h2 id="cta-h">Precision in every filing. <em>Confidence in every decision.</em></h2>
     </div>
     <div class="cta-row rv">
       <a class="btn btn-brass" href="contact.html">Book a consultation {ARROW}</a>
@@ -275,7 +275,7 @@ def build_home():
     approach = opt_in(part('approach'), '<section class="approach on-dark" aria-labelledby="ap-h">', '<section class="approach on-dark" id="approach" aria-labelledby="ap-h">')
     body = '\n\n'.join([hero, part('band'), part('ask'), services, approach, part('reviews'), CTA])
     page('index.html', 'home', 'AJ Associates | Tax, Audit &amp; Management Consultancy in Kochi, Kerala',
-         'AJ Associates is a tax, audit and management consultancy in Kochi, Kerala — GST, Income Tax, accounting, company formation, bank loan proposals and corporate compliance, led by senior partners.',
+         'AJ Associates is a tax, audit and management consultancy in Kochi, Kerala — GST, Income Tax, accounting, company formation, bank loan proposals and corporate compliance, led by experienced partners.',
          fix_links(body, 'index.html'), JSON_LD + '\n')
 
 def build_services_index():
@@ -313,7 +313,7 @@ def build_service_pages():
       <ul>{others}</ul>
       <div class="side-cta">
         <h4>Not sure what you need?</h4>
-        <p>Tell us about your business and a senior partner will point you to the right service.</p>
+        <p>Tell us about your business and our team will point you to the right service.</p>
         <a class="btn btn-brass btn-sm" href="contact.html">Book a consultation {ARROW}</a>
       </div>
     </aside>
@@ -324,7 +324,7 @@ def build_service_pages():
 def build_packages():
     body = h1ize(fix_links(opt_in(part('packages'), '<section class="sec" id="packages">', '<section class="sec fit-me" id="packages">'), 'packages.html'))
     page('packages.html', 'packages', 'Packages | AJ Associates — find the right compliance scope',
-         'Choose your business type and turnover to see the tax, accounts and compliance scope we would typically recommend — with a senior partner confirming the final scope and fee.', body)
+         'Choose your business type and turnover to see the tax, accounts and compliance scope we would typically recommend — with our team confirming the final scope and fee.', body)
 
 def build_about():
     team = opt_in(part('team'), '<section class="sec team" id="team">', '<section class="sec team fit-me" id="team">')
@@ -343,7 +343,7 @@ def build_careers():
                      'We welcome experienced accountants, tax consultants and article trainees looking for meaningful professional growth.')
     roles = '''<div class="roles">
       <div class="role rv"><h3>Accountants</h3><p>Bookkeeping, reconciliations, statutory filings and audit support across a varied client base.</p></div>
-      <div class="role rv"><h3>Tax consultants</h3><p>Income Tax, GST and TDS work, notice responses and representation alongside the senior team.</p></div>
+      <div class="role rv"><h3>Tax consultants</h3><p>Income Tax, GST and TDS work, notice responses and representation alongside the team.</p></div>
       <div class="role rv"><h3>Article trainees</h3><p>Learn the practice hands-on across filings, audits and company law.</p></div>
     </div>'''
     body = hero + f'''

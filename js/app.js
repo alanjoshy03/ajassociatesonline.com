@@ -72,6 +72,56 @@
     $$('.chat-menu a').forEach(function (a) { a.addEventListener('click', function () { setChat(false); }); });
   }
 
+  /* ---- hero box slides: calendar / tax estimate / first 30 days ---- */
+  var led = $('.ledger');
+  if (led && $('.slide', led)) {
+    var slides = $$('.slide', led), dotSets = $$('.dots', led), stamp = $('.stamp', led), cur = 0, timer = 0, stopped = false;
+    var show = function (n) {
+      cur = (n + slides.length) % slides.length;
+      slides.forEach(function (s, i) {
+        var on = i === cur;
+        s.classList.toggle('on', on); s.setAttribute('aria-hidden', on ? 'false' : 'true');
+        if ('inert' in s) s.inert = !on;
+      });
+      dotSets.forEach(function (g) {
+        $$('button', g).forEach(function (b, i) { if (i === cur) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
+      });
+      if (stamp) stamp.textContent = slides[cur].getAttribute('data-stamp') || '';
+    };
+    dotSets.forEach(function (g) {
+      $$('button', g).forEach(function (b, i) { b.addEventListener('click', function () { stopped = true; clearInterval(timer); show(i); }); });
+    });
+    $$('.arw', led).forEach(function (b) {
+      b.addEventListener('click', function () { stopped = true; clearInterval(timer); show(cur + (+b.getAttribute('data-dir'))); });
+    });
+    var start = slides.findIndex(function (s) { return s.classList.contains('on'); });
+    show(start < 0 ? 0 : start);
+    var still = document.documentElement.classList.contains('lite') || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+    var play = function () { clearInterval(timer); if (!stopped && !still) timer = setInterval(function () { show(cur + 1); }, 8000); };
+    ['mouseenter', 'focusin', 'touchstart'].forEach(function (ev) { led.addEventListener(ev, function () { clearInterval(timer); }, { passive: true }); });
+    led.addEventListener('mouseleave', play);
+    play();
+
+    var rg = $('#est-rg');
+    if (rg) {
+      var inr = function (n) { return '\u20b9' + Math.round(n).toLocaleString('en-IN'); };
+      var tax = function (t) {           // new regime, FY 2025-26: 12L rebate with marginal relief, 4% cess
+        var left = t, r = 0, i, x;
+        for (i = 0; i < 6 && left > 0; i++) { x = Math.min(left, 400000); r += x * i * 0.05; left -= x; }
+        if (left > 0) r += left * 0.3;
+        r = t <= 1200000 ? 0 : Math.min(r, t - 1200000);
+        return r * 1.04;
+      };
+      var calc = function () {
+        var v = +rg.value, t = Math.max(0, v - 75000), x = tax(t);
+        $('#est-inc').textContent = inr(v); $('#est-ti').textContent = inr(t);
+        $('#est-tx').textContent = inr(x); $('#est-td').textContent = inr(x / 12);
+      };
+      rg.addEventListener('input', function () { stopped = true; clearInterval(timer); calc(); });
+      calc();
+    }
+  }
+
   /* ---- reveal on scroll ---- */
   if ('IntersectionObserver' in window && !lite) {
     var rv = new IntersectionObserver(function (es) {
@@ -109,7 +159,8 @@
         s.style.zoom = 1; s.style.minHeight = '0px'; s.style.paddingTop = '0px'; s.style.paddingBottom = '0px';
         var nat = s.getBoundingClientRect().height;                             // content-only height
         var budget = avail - PT - PB - topCut - botCut - slant * 0.85;
-        var z = Math.max(0.55, Math.min(1, budget / nat * 0.985));
+        var top = s.id === 'home' ? 0.84 : 1;                                   // the home hero reads oversized on big screens at 1:1
+        var z = Math.max(0.55, Math.min(top, budget / nat * 0.985));
         s.style.setProperty('--z', z.toFixed(3));
         s.style.zoom = z.toFixed(3);
         s.style.paddingTop = ((PT + topCut) / z + slant) + 'px';

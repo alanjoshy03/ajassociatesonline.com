@@ -398,8 +398,8 @@ blockquote { font: italic 500 clamp(1.25rem, 2.4vw, 1.65rem)/1.35 var(--serif); 
 .fit .sec-head { margin-bottom: 1.6rem; }
 .fit .sec-head h2 { margin: .8rem 0 .8rem; }
 /* home */
-.fit .hero-grid { gap: 3rem; }
-.fit.hero h1 { font-size: 4.1rem; margin: 1rem 0 1.1rem; }
+.fit .hero-grid { gap: 5.5rem; }
+.fit.hero h1 { font-size: 3.7rem; margin: 1rem 0 1.1rem; }
 .fit.hero .lead { margin-bottom: 1.6rem; }
 .fit .ledger { padding: 1.6rem 1.5rem 1.2rem; }
 .fit .ledger li { padding: .8rem 0; }
@@ -627,3 +627,28 @@ h1.h2 { letter-spacing: -.02em; }
 .chat-menu .ic.wa { background: #1f9d55; }
 .chat-menu .ic.mail { background: var(--brass); color: var(--ink); }
 .chat-menu .ic.call { background: var(--blue); }
+
+/* ---------- hero box: three slides (calendar / tax estimate / first 30 days) ---------- */
+.slides { display: grid; }
+.slide { grid-area: 1 / 1; visibility: hidden; opacity: 0; transition: opacity .35s, visibility 0s .35s; }
+.slide.on { visibility: visible; opacity: 1; transition: opacity .35s; }
+.lite .slide, .lite .slide.on { transition: none; }
+@media (prefers-reduced-motion: reduce) { .slide, .slide.on { transition: none; } }
+.ledger-r { display: flex; align-items: center; gap: .5rem; }
+.dots { display: inline-flex; }
+.dots button { position: relative; width: 1.25rem; height: 1.25rem; padding: 0; border: 0; background: none; cursor: pointer; }
+.dots button::after { content: ""; position: absolute; inset: .34rem; border-radius: 50%; border: 1.5px solid var(--navy); transition: background-color .2s; }
+.dots button[aria-current]::after { background: var(--navy); }
+.est { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: .1rem .9rem; padding: .95rem 0 .55rem; border-bottom: 1px dashed var(--line); font-size: .95rem; }
+.est b { font: 600 1.55rem/1 var(--serif); color: var(--navy); font-variant-numeric: lining-nums tabular-nums; }
+.est input { grid-column: 1 / -1; width: 100%; margin: .55rem 0 0; accent-color: var(--navy); }
+.ledger li.kv { grid-template-columns: 1fr auto; }
+.ledger li.kv b { font: 600 1.05rem/1 var(--serif); color: var(--navy); font-variant-numeric: lining-nums tabular-nums; }
+.ledger .fine a { color: var(--navy); font-weight: 650; text-decoration: underline; text-underline-offset: 2px; }
+.fit .est { padding: .7rem 0 .45rem; }
+.ledger-r { gap: .3rem; }
+.dots button:not(.arw) { width: 1.1rem; }
+.arw { width: 1.6rem; height: 1.6rem; padding: 0; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: transparent; color: var(--navy); cursor: pointer; transition: background-color .18s, color .18s; }
+.arw:hover, .arw:focus-visible { background: var(--navy); color: #fff; }
+.arw .i { width: .8rem; height: .8rem; stroke-width: 2.4; }
+
