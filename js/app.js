@@ -7,6 +7,21 @@
   var WA = '916282406091';
   var lite = document.documentElement.classList.contains('lite');
 
+  /* ---- first-visit loading screen: lifts once the page has loaded (never before ~1.1s, never after 3.5s) ---- */
+  var root = document.documentElement, sp = $('#splash');
+  if (sp && root.classList.contains('splash')) {
+    var spDone = false;
+    var spHide = function () {
+      if (spDone) return; spDone = true;
+      setTimeout(function () {
+        sp.classList.add('go');
+        setTimeout(function () { root.classList.remove('splash'); sp.parentNode && sp.parentNode.removeChild(sp); }, 700);
+      }, Math.max(0, 1100 - performance.now()));
+    };
+    if (document.readyState === 'complete') spHide(); else window.addEventListener('load', spHide);
+    setTimeout(spHide, 3500);
+  }
+
   var yr = $('#yr'); if (yr) yr.textContent = new Date().getFullYear();
 
   $$('[data-reload]').forEach(function (b) { b.addEventListener('click', function () { window.location.reload(); }); });
@@ -121,6 +136,245 @@
       calc();
     }
   }
+
+  /* ---- services index: hover/focus previews on desktop, tap-to-open rows on phones ---- */
+  var sx = $('.sx-list');
+  if (sx) {
+    var sxRows = $$('.sx-row', sx), sxItems = $$('.sx-item', sx), sxDesk = window.matchMedia('(min-width:900px)');
+    var sxOpen = function (n) {
+      sxItems.forEach(function (li, k) { var on = k === n; li.classList.toggle('on', on); sxRows[k].setAttribute('aria-expanded', on ? 'true' : 'false'); });
+    };
+    sxRows.forEach(function (r, i) {
+      r.addEventListener('mouseenter', function () { if (sxDesk.matches) sxOpen(i); });
+      r.addEventListener('focus', function () { if (sxDesk.matches) sxOpen(i); });
+      r.addEventListener('click', function (e) {
+        if (sxDesk.matches) return;                       // on desktop the row is a normal link
+        e.preventDefault();
+        var before = r.getBoundingClientRect().top;
+        sxOpen(sxItems[i].classList.contains('on') ? -1 : i);
+        window.scrollBy(0, r.getBoundingClientRect().top - before);   // keep the tapped row where the finger is
+      });
+    });
+  }
+
+  /* ---- business-structure quiz ---- */
+  var sq = $('#sq');
+  if (sq) {
+    var SQ = [
+      { q: 'How many people will own the business?', o: [['Just me', 'solo'], ['Two or more of us', 'multi']] },
+      { q: 'Will you bring in outside investors, or give shares to them?', o: [['Yes, that is the plan', 'inv'], ['Maybe later', 'maybe'], ['No', 'no']] },
+      { q: 'Do you want your personal assets kept apart from business debts?', o: [['Yes, limited liability matters to me', 'lim'], ['Not a big concern', 'nolim']] },
+      { q: 'What turnover do you expect in the first year?', o: [['Under \u20b920 lakh', 'low'], ['\u20b920 lakh to \u20b92 crore', 'mid'], ['Above \u20b92 crore', 'high']] },
+      { q: 'What matters more to you right now?', o: [['Lowest cost and least paperwork', 'cheap'], ['Credibility with banks and customers', 'cred']] }
+    ];
+    var SR = {
+      prop: { n: 'Sole proprietorship', why: 'You are starting alone, and keeping cost and paperwork low matters most. It is the quickest way to begin trading.', c: 'Lowest', l: 'Unlimited', g: 'Simple to start, but your personal assets are exposed to business debts. You can convert to a company later.' },
+      opc: { n: 'One Person Company', why: 'You are a single founder who wants limited liability and a proper company identity without needing a partner.', c: 'Medium', l: 'Limited', g: 'It has eligibility conditions, such as a single resident owner and a nominee. A private limited company is the alternative if you plan to grow.' },
+      part: { n: 'Partnership firm', why: 'Two or more of you want to start quickly at low cost, and limited liability is not a concern.', c: 'Low', l: 'Unlimited', g: 'A well-drafted partnership deed is essential. Partners are personally liable, so many move to an LLP as they grow.' },
+      llp: { n: 'Limited Liability Partnership', why: 'You are two or more people who want limited liability with lighter compliance than a company, and no outside equity investors.', c: 'Medium', l: 'Limited', g: 'Popular for professional and service businesses. It cannot issue shares, so it is harder to raise venture investment.' },
+      pvt: { n: 'Private Limited Company', why: 'You want investor-readiness and credibility with banks and customers, with limited liability, and you accept more compliance for it.', c: 'Higher', l: 'Limited', g: 'The standard structure for raising outside funding and issuing shares. It needs annual filings and an audit.' }
+    };
+    var sa = [], sp = 0;
+    var sqPick = function () {
+      if (sa[1] === 'inv') return SR.pvt;
+      var grow = sa[3] === 'high' || sa[4] === 'cred' || sa[1] === 'maybe';
+      if (sa[0] === 'solo') return sa[2] === 'lim' ? (grow ? SR.pvt : SR.opc) : SR.prop;
+      return sa[2] === 'lim' ? (grow ? SR.pvt : SR.llp) : SR.part;
+    };
+    var sqTop = function (label, pct) {
+      return '<div class="sq-top"><b>Find your structure</b><span>' + label + '</span></div><div class="sq-bar"><i style="width:' + pct + '%"></i></div>';
+    };
+    var sqAsk = function () {
+      var s = SQ[sp], h = sqTop('Step ' + (sp + 1) + ' of ' + SQ.length, sp / SQ.length * 100) + '<p class="sq-q">' + s.q + '</p>';
+      s.o.forEach(function (o, i) { h += '<button type="button" class="sq-opt" data-i="' + i + '">' + o[0] + '</button>'; });
+      if (sp > 0) h += '<button type="button" class="sq-back" data-back>Back</button>';
+      sq.innerHTML = h;
+    };
+    var sqResult = function () {
+      var r = sqPick();
+      var wa = 'https://wa.me/' + WA + '?text=' + encodeURIComponent('Greetings AJ Associates! The structure quiz suggested a ' + r.n + ' for my business. I would like to discuss it.');
+      sq.innerHTML = sqTop('Your result', 100) + '<div class="sq-res"><p class="sq-lbl">Based on your answers, the closest fit is</p><h3>' + r.n + '</h3><p>' + r.why + '</p>' +
+        '<div class="sq-kv"><div>Compliance<b>' + r.c + '</b></div><div>Liability<b>' + r.l + '</b></div><div>Setup<b>We handle it</b></div></div>' +
+        '<p><b>Good to know:</b> ' + r.g + '</p><div class="sq-act"><a class="btn btn-solid btn-sm" href="' + wa + '" target="_blank" rel="noopener">Discuss this with our team</a>' +
+        '<button type="button" class="btn btn-ghost btn-sm" data-restart>Start over</button></div>' +
+        '<p class="sq-fine">Indicative guidance only. The right structure also depends on your tax position, licences and plans, so our team confirms it before anything is filed.</p></div>';
+    };
+    sq.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      if (b.hasAttribute('data-restart')) { sa = []; sp = 0; sqAsk(); return; }
+      if (b.hasAttribute('data-back')) { sp--; sqAsk(); return; }
+      if (b.hasAttribute('data-i')) { sa[sp] = SQ[sp].o[+b.getAttribute('data-i')][1]; sp++; if (sp >= SQ.length) sqResult(); else sqAsk(); }
+    });
+    sqAsk();
+  }
+
+  /* ---- FAQs: search, category tabs, deep links and "was this helpful?" ---- */
+  var faq = $('.faq-list');
+  if (faq) {
+    var fItems = $$('details', faq), fCats = $$('.faq-cat', faq), fTabs = $$('.faq-tabs button'), fIn = $('#faq-q'), fEmpty = $('.faq-empty'), fCat = 'All';
+    var fApply = function () {
+      var q = fIn.value.trim().toLowerCase(), shown = 0;
+      fItems.forEach(function (d) {
+        var inCat = fCat === 'All' || d.parentNode.getAttribute('data-cat') === fCat;
+        var inText = !q || d.textContent.toLowerCase().indexOf(q) > -1;
+        d.hidden = !(inCat && inText); if (!d.hidden) shown++;
+      });
+      fCats.forEach(function (c) { c.hidden = !$$('details:not([hidden])', c).length; });
+      if (fEmpty) fEmpty.hidden = shown > 0;
+    };
+    var fSetTab = function (name) {
+      fCat = name;
+      fTabs.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-cat').replace('&amp;', '&') === name ? 'true' : 'false'); });
+    };
+    fTabs.forEach(function (b) { b.addEventListener('click', function () { fSetTab(b.getAttribute('data-cat').replace('&amp;', '&')); fApply(); }); });
+    if (fIn) fIn.addEventListener('input', fApply);
+    var fOpenHash = function () {
+      var d = location.hash.length > 1 ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null;
+      if (d && d.tagName === 'DETAILS') {
+        fSetTab('All'); if (fIn) fIn.value = ''; fApply(); d.open = true;
+        setTimeout(function () { d.scrollIntoView({ block: 'start' }); }, 60);
+      }
+    };
+    window.addEventListener('hashchange', fOpenHash);
+    fOpenHash();
+    faq.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-fb]'); if (!b) return;
+      var box = b.closest('.faq-a'), msg = $('.faq-fbmsg', box);
+      msg.textContent = b.getAttribute('data-fb') === 'yes' ? 'Glad that helped.' : 'Sorry about that. Message us on WhatsApp or use the contact page and we will answer it personally.';
+      $('.faq-fb', box).hidden = true;
+    });
+  }
+
+  /* ---- resources: live deadline calendar, worked out from the visitor's date ---- */
+  var calEl = $('#cal');
+  if (calEl) {
+    var CAL = {
+      m: [[0, 7, 'TDS / TCS deposit'], [0, 11, 'GSTR-1, monthly filers'], [0, 15, 'PF and ESI contributions'], [0, 20, 'GSTR-3B, monthly filers']],
+      q: [[6, 15, 'Advance tax, first instalment'], [9, 15, 'Advance tax, second instalment'], [12, 15, 'Advance tax, third instalment'], [3, 15, 'Advance tax, final instalment'],
+          [7, 31, 'TDS / TCS return, April to June'], [10, 31, 'TDS / TCS return, July to September'], [1, 31, 'TDS / TCS return, October to December'], [5, 31, 'TDS / TCS return, January to March']],
+      a: [[7, 31, 'Income tax return, non-audit cases'], [9, 30, 'Tax audit report'], [10, 31, 'Income tax return, audit cases'], [12, 31, 'GSTR-9, annual GST return']]
+    };
+    var MN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var now = new Date(); now.setHours(0, 0, 0, 0);
+    var nextOf = function (e, k) {
+      var y = now.getFullYear(), d;
+      if (k === 'm') { d = new Date(y, now.getMonth(), e[1]); if (d < now) d = new Date(y, now.getMonth() + 1, e[1]); }
+      else { d = new Date(y, e[0] - 1, e[1]); if (d < now) d = new Date(y + 1, e[0] - 1, e[1]); }
+      return d;
+    };
+    var calDraw = function (k) {
+      var rows = CAL[k].map(function (e) { var d = nextOf(e, k); return { d: d, t: e[2], n: Math.round((d - now) / 864e5) }; })
+        .sort(function (a, b) { return a.d - b.d; }).slice(0, 4);
+      $('#cal-list').innerHTML = rows.map(function (x, i) {
+        var lab = x.n === 0 ? 'Due today' : x.n === 1 ? 'Tomorrow' : x.n <= 30 ? 'In ' + x.n + ' days' : MN[x.d.getMonth()] + ' ' + x.d.getFullYear();
+        return '<li class="cal-row' + (i === 0 ? ' next' : x.n <= 7 ? ' soon' : '') + '"><span class="cal-d">' + x.d.getDate() + '<small>' + MN[x.d.getMonth()] + '</small></span><span class="cal-t">' + x.t + '</span><span class="cal-p">' + (i === 0 ? 'Next \u00b7 ' : '') + lab + '</span></li>';
+      }).join('');
+    };
+    $$('.cal-tabs button', calEl).forEach(function (b) {
+      b.addEventListener('click', function () {
+        $$('.cal-tabs button', calEl).forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+        calDraw(b.getAttribute('data-k'));
+      });
+    });
+    calDraw('m');
+  }
+
+  /* ---- resources: tick off a checklist as you gather the documents ---- */
+  $$('.chk-card').forEach(function (card) {
+    var boxes = $$('input[type="checkbox"]', card), cnt = $('.cnt', card), fill = $('.bar i', card);
+    var upd = function () {
+      var n = boxes.filter(function (b) { return b.checked; }).length;
+      cnt.textContent = n === boxes.length ? 'All set. You are ready for the first call.' : n + ' of ' + boxes.length + ' ready';
+      fill.style.width = (n / boxes.length * 100) + '%';
+      card.classList.toggle('done', n === boxes.length);
+    };
+    boxes.forEach(function (b) { b.addEventListener('change', upd); });
+  });
+
+  /* ---- resources: arrows for the pinned-notes board ---- */
+  var nbRail = $('.nb-rail');
+  if (nbRail) {
+    var nbStill = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    $$('.nb-arrows button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var card = $('.pin', nbRail);
+        nbRail.scrollBy({ left: (+b.getAttribute('data-dir')) * (card.offsetWidth + 29), behavior: nbStill ? 'auto' : 'smooth' });
+      });
+    });
+  }
+
+  /* ---- dropdowns: the real <select> stays (for the form data, and as the fallback); a styled list replaces its pop-up ---- */
+  $$('.f select').forEach(function (sel, n) {
+    var wrap = document.createElement('div'); wrap.className = 'cs cs-on';
+    sel.parentNode.insertBefore(wrap, sel); wrap.appendChild(sel);
+    sel.tabIndex = -1; sel.setAttribute('aria-hidden', 'true');
+    var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'cs-btn';
+    btn.setAttribute('aria-haspopup', 'listbox'); btn.setAttribute('aria-expanded', 'false');
+    var list = document.createElement('ul'); list.className = 'cs-list'; list.setAttribute('role', 'listbox'); list.hidden = true;
+    list.id = (sel.id || 'cs' + n) + '-list'; btn.setAttribute('aria-controls', list.id);
+    var label = sel.id ? $('label[for="' + sel.id + '"]') : null;
+    if (label) { if (!label.id) label.id = sel.id + '-lbl'; btn.setAttribute('aria-labelledby', label.id); }
+    var items = [];
+    $$('option', sel).forEach(function (o, i) {
+      var li = document.createElement('li'); li.setAttribute('role', 'option'); li.className = 'cs-opt'; li.id = list.id + '-' + i;
+      li.setAttribute('data-i', i); if (!o.value) li.setAttribute('data-empty', ''); li.textContent = o.textContent;
+      list.appendChild(li); items.push(li);
+    });
+    wrap.appendChild(btn); wrap.appendChild(list);
+    var active = 0;
+    var sync = function () {
+      var o = sel.options[sel.selectedIndex];
+      btn.textContent = o ? o.textContent : ''; btn.classList.toggle('cs-ph', !sel.value);
+      items.forEach(function (li, i) { li.setAttribute('aria-selected', i === sel.selectedIndex ? 'true' : 'false'); });
+    };
+    var setActive = function (i, still) {
+      active = Math.max(0, Math.min(items.length - 1, i));
+      items.forEach(function (li, k) { li.classList.toggle('cs-act', k === active); });
+      btn.setAttribute('aria-activedescendant', items[active].id);
+      if (!still) items[active].scrollIntoView({ block: 'nearest' });
+    };
+    var open = function () {
+      if (!list.hidden) return;
+      list.hidden = false; btn.setAttribute('aria-expanded', 'true'); wrap.classList.add('open');
+      var r = btn.getBoundingClientRect(), h = list.offsetHeight;
+      wrap.classList.toggle('cs-up', window.innerHeight - r.bottom < h + 12 && r.top > h + 12);
+      setActive(Math.max(0, sel.selectedIndex));
+    };
+    var close = function () {
+      if (list.hidden) return;
+      list.hidden = true; btn.setAttribute('aria-expanded', 'false'); btn.removeAttribute('aria-activedescendant'); wrap.classList.remove('open');
+    };
+    var choose = function (i) {
+      sel.selectedIndex = i; sel.dispatchEvent(new Event('change', { bubbles: true })); wrap.classList.remove('cs-invalid'); close(); btn.focus();
+    };
+    btn.addEventListener('click', function () { if (list.hidden) open(); else close(); });
+    list.addEventListener('mousedown', function (e) { e.preventDefault(); });
+    list.addEventListener('click', function (e) { var li = e.target.closest('.cs-opt'); if (li) choose(+li.getAttribute('data-i')); });
+    list.addEventListener('mousemove', function (e) { var li = e.target.closest('.cs-opt'); if (li) setActive(+li.getAttribute('data-i'), true); });
+    btn.addEventListener('keydown', function (e) {
+      var k = e.key;
+      if (k === 'ArrowDown' || k === 'ArrowUp') { e.preventDefault(); if (list.hidden) open(); else setActive(active + (k === 'ArrowDown' ? 1 : -1)); }
+      else if (k === 'Enter' || k === ' ') { e.preventDefault(); if (list.hidden) open(); else choose(active); }
+      else if (k === 'Escape') { if (!list.hidden) { e.preventDefault(); close(); } }
+      else if (k === 'Home' && !list.hidden) { e.preventDefault(); setActive(0); }
+      else if (k === 'End' && !list.hidden) { e.preventDefault(); setActive(items.length - 1); }
+      else if (k === 'Tab') { close(); }
+      else if (k.length === 1 && !e.ctrlKey && !e.metaKey) {
+        var c = k.toLowerCase();
+        for (var s = 1; s <= items.length; s++) {
+          var idx = (active + s) % items.length;
+          if (items[idx].textContent.trim().toLowerCase().indexOf(c) === 0) { if (list.hidden) open(); setActive(idx); break; }
+        }
+      }
+    });
+    btn.addEventListener('blur', close);
+    document.addEventListener('click', function (e) { if (!wrap.contains(e.target)) close(); });
+    if (label) label.addEventListener('click', function (e) { e.preventDefault(); btn.focus(); });
+    sel.addEventListener('invalid', function () { wrap.classList.add('cs-invalid'); });
+    sel.addEventListener('change', sync);
+    if (sel.form) sel.form.addEventListener('reset', function () { setTimeout(sync, 0); });
+    sync();
+  });
 
   /* ---- reveal on scroll ---- */
   if ('IntersectionObserver' in window && !lite) {
@@ -240,29 +494,155 @@
     renderFinder();
   }
 
-  /* ---- forms: real hand-off (WhatsApp / email), never a fake "submitted" ---- */
+  /* ---- forms: sent to the host's form handling (stored there, then forwarded to our inbox) ---- */
   var guard = function (f) {
     if (f.elements.website && f.elements.website.value) return false; // honeypot
     if (!f.checkValidity()) { f.reportValidity(); return false; }
     return true;
   };
-  var cf = $('#cform');
-  if (cf) cf.addEventListener('submit', function (e) {
-    e.preventDefault(); if (!guard(cf)) return;
-    var f = cf.elements;
-    var text = 'Greetings AJ Associates!\nName: ' + f.name.value.trim() + '\nMobile: ' + f.tel.value.trim() +
-      (f.mail.value ? '\nEmail: ' + f.mail.value.trim() : '') + '\nService: ' + f.svc.value + '\n\n' + f.msg.value.trim();
-    window.open('https://wa.me/' + WA + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
-    $('.msg', cf).textContent = 'Opening WhatsApp with your details — just press send.';
-  });
-  var pf = $('#pform');
-  if (pf) pf.addEventListener('submit', function (e) {
-    e.preventDefault(); if (!guard(pf)) return;
-    var f = pf.elements;
-    var body = 'Firm: ' + f.firm.value.trim() + '\nCategory: ' + f.cat.value + '\nEmail: ' + f.mail.value.trim() +
-      '\nMobile: ' + f.tel.value.trim() + '\n\n' + f.note.value.trim();
-    window.location.href = 'mailto:info@ajassociatesonline.com?subject=' +
-      encodeURIComponent('Collaboration proposal — ' + f.firm.value.trim()) + '&body=' + encodeURIComponent(body);
-    $('.msg', pf).textContent = 'Opening your email app. If nothing opens, write to info@ajassociatesonline.com.';
-  });
+  var sendForm = function (form, okMsg, key) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault(); if (!guard(form)) return;
+      var btn = $('button[type="submit"]', form), msg = $('.msg', form);
+      btn.disabled = true; msg.textContent = 'Sending\u2026';
+      fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form)).toString() })
+        .then(function (r) { if (!r.ok) throw new Error(r.status); form.reset(); msg.textContent = okMsg; })
+        .catch(function () { msg.textContent = 'Sorry, that did not go through. Please try again, or write to info@ajassociatesonline.com.'; })
+        .then(function () { btn.disabled = false; });
+    });
+    if (new RegExp('[?&]sent=' + (key || '1') + '(&|$)').test(location.search)) $('.msg', form).textContent = okMsg;
+  };
+  var cf = $('#cform'), pf = $('#pform');
+  if (cf) sendForm(cf, 'Thank you. Your enquiry has reached our team, and we usually reply within one working day.');
+  if (pf) sendForm(pf, 'Thank you. Your proposal has reached our partner desk, and we will be in touch.');
+
+  /* ---- contact: enquiry / booking tabs, and the booking form's date rules (no Sundays) ---- */
+  var bf = $('#bform'), fTabs2 = $$('.f-tabs button');
+  if (bf) {
+    sendForm(bf, 'Thank you. We have your request and will confirm your slot by phone, email or WhatsApp.', 'book');
+    var dt = bf.elements.date, pad = function (n) { return (n < 10 ? '0' : '') + n; };
+    var iso = function (d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); };
+    var t0 = new Date(), t1 = new Date(t0.getFullYear(), t0.getMonth(), t0.getDate() + 1), t2 = new Date(t0.getFullYear(), t0.getMonth(), t0.getDate() + 60);
+    dt.min = iso(t1); dt.max = iso(t2);
+    var hol = {};
+    try { hol = JSON.parse(($('#holidays') || {}).textContent || '{}'); } catch (err) { hol = {}; }
+    var chkDay = function () {
+      var d = dt.value ? new Date(dt.value + 'T00:00:00') : null, msg = '';
+      if (d && d.getDay() === 0) msg = 'We are closed on Sundays. Please choose Monday to Saturday.';
+      else if (d && hol[dt.value]) msg = 'We are closed on ' + hol[dt.value] + '. Please choose another day.';
+      dt.setCustomValidity(msg);
+      return msg;
+    };
+    dt.addEventListener('input', chkDay);
+    dt.addEventListener('change', function () { if (chkDay()) dt.reportValidity(); });
+    var clNext = $('#cl-next'), todayIso = iso(t0);
+    var upcoming = Object.keys(hol).filter(function (k) { return k >= todayIso; }).sort()[0];
+    if (clNext && upcoming) {
+      var ud = new Date(upcoming + 'T00:00:00');
+      clNext.textContent = 'Next closure: ' + hol[upcoming] + ', ' + ud.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' }) + '.';
+      clNext.hidden = false;
+    }
+    /* ---- date picker: the real date input stays underneath (value and validation); a styled calendar replaces the system pop-up ---- */
+    var dpWrap = document.createElement('div'); dpWrap.className = 'dp dp-on';
+    dt.parentNode.insertBefore(dpWrap, dt); dpWrap.appendChild(dt); dt.tabIndex = -1; dt.setAttribute('aria-hidden', 'true');
+    var dpBtn = document.createElement('button'); dpBtn.type = 'button'; dpBtn.className = 'dp-btn';
+    dpBtn.setAttribute('aria-haspopup', 'dialog'); dpBtn.setAttribute('aria-expanded', 'false');
+    var dpLab = $('label[for="' + dt.id + '"]', bf);
+    if (dpLab) { if (!dpLab.id) dpLab.id = dt.id + '-lbl'; dpBtn.setAttribute('aria-labelledby', dpLab.id); dpLab.addEventListener('click', function (e) { e.preventDefault(); dpBtn.focus(); }); }
+    var pop = document.createElement('div'); pop.className = 'dp-pop'; pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-label', 'Choose a date'); pop.hidden = true;
+    dpWrap.appendChild(dpBtn); dpWrap.appendChild(pop);
+    var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    var DOW = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+    var parseIso = function (s) { var p = s.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); };
+    var okDay = function (s) { return s >= dt.min && s <= dt.max && parseIso(s).getDay() !== 0 && !hol[s]; };
+    var fmtDmy = function (s) { var p = s.split('-'); return p[2] + '-' + p[1] + '-' + p[0]; };
+    var view = new Date(parseIso(dt.min).getFullYear(), parseIso(dt.min).getMonth(), 1), focusIso = '';
+    var chevL = '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>', chevR = '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+    var dpSync = function () { dpBtn.textContent = dt.value ? fmtDmy(dt.value) : 'Choose a date'; dpBtn.classList.toggle('dp-ph', !dt.value); };
+    var render = function () {
+      var y = view.getFullYear(), m = view.getMonth(), lead = (new Date(y, m, 1).getDay() + 6) % 7, days = new Date(y, m + 1, 0).getDate();
+      var prevOk = iso(new Date(y, m, 0)) >= dt.min, nextOk = iso(new Date(y, m + 1, 1)) <= dt.max;
+      var h = '<div class="dp-head"><button type="button" class="dp-nav" data-nav="-1" aria-label="Previous month"' + (prevOk ? '' : ' disabled') + '>' + chevL + '</button>' +
+        '<span class="dp-title">' + MONTHS[m] + ' ' + y + '</span>' +
+        '<button type="button" class="dp-nav" data-nav="1" aria-label="Next month"' + (nextOk ? '' : ' disabled') + '>' + chevR + '</button></div>' +
+        '<div class="dp-dow">' + DOW.map(function (d) { return '<span>' + d + '</span>'; }).join('') + '</div><div class="dp-grid">';
+      for (var i = 0; i < lead; i++) h += '<span></span>';
+      for (var d = 1; d <= days; d++) {
+        var dd = new Date(y, m, d), s = iso(dd), ok = okDay(s);
+        h += '<button type="button" class="dp-day' + (s === dt.value ? ' sel' : '') + (s === todayIso ? ' today' : '') + (hol[s] ? ' hol' : '') + '" data-iso="' + s + '"' +
+          (ok ? '' : ' disabled') + (hol[s] ? ' title="Closed: ' + hol[s] + '"' : '') +
+          ' aria-label="' + dd.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + (hol[s] ? ', closed for ' + hol[s] : '') + '"' +
+          ' tabindex="' + (s === focusIso ? 0 : -1) + '">' + d + '</button>';
+      }
+      h += '</div><p class="dp-foot">Closed on Sundays and public holidays.</p><div class="dp-act"><button type="button" class="dp-clear">Clear</button></div>';
+      pop.innerHTML = h;
+    };
+    var focusDay = function () { var b = $('.dp-day[tabindex="0"]', pop) || $('.dp-day:not(:disabled)', pop); if (b) b.focus(); };
+    var firstOk = function () { var b = $('.dp-day:not(:disabled)', pop); return b ? b.getAttribute('data-iso') : ''; };
+    var openPop = function () {
+      if (!pop.hidden) return;
+      var base = dt.value ? parseIso(dt.value) : parseIso(dt.min);
+      view = new Date(base.getFullYear(), base.getMonth(), 1); focusIso = dt.value && okDay(dt.value) ? dt.value : '';
+      render(); if (!focusIso) { focusIso = firstOk(); render(); }
+      pop.hidden = false; dpBtn.setAttribute('aria-expanded', 'true'); dpWrap.classList.add('open');
+      var r = dpBtn.getBoundingClientRect(), h = pop.offsetHeight, w = pop.offsetWidth;
+      dpWrap.classList.toggle('dp-up', window.innerHeight - r.bottom < h + 12 && r.top > h + 12);
+      dpWrap.classList.toggle('dp-right', r.left + w > window.innerWidth - 8);
+      focusDay();
+    };
+    var closePop = function (back) {
+      if (pop.hidden) return;
+      pop.hidden = true; dpBtn.setAttribute('aria-expanded', 'false'); dpWrap.classList.remove('open');
+      if (back) dpBtn.focus();
+    };
+    var setValue = function (s) {
+      dt.value = s; dt.dispatchEvent(new Event('input', { bubbles: true })); dt.dispatchEvent(new Event('change', { bubbles: true }));
+      dpWrap.classList.remove('dp-invalid'); dpSync();
+    };
+    dpBtn.addEventListener('click', function () { if (pop.hidden) openPop(); else closePop(false); });
+    dpBtn.addEventListener('keydown', function (e) { if (e.key === 'ArrowDown') { e.preventDefault(); openPop(); } });
+    pop.addEventListener('click', function (e) {
+      var day = e.target.closest('.dp-day'), nav = e.target.closest('.dp-nav');
+      if (day && !day.disabled) { setValue(day.getAttribute('data-iso')); closePop(true); }
+      else if (nav && !nav.disabled) {
+        view = new Date(view.getFullYear(), view.getMonth() + (+nav.getAttribute('data-nav')), 1); focusIso = '';
+        render(); focusIso = firstOk(); render();
+        var again = $('.dp-nav[data-nav="' + nav.getAttribute('data-nav') + '"]', pop); if (again && !again.disabled) again.focus(); else focusDay();
+      }
+      else if (e.target.closest('.dp-clear')) { setValue(''); closePop(true); }
+    });
+    pop.addEventListener('keydown', function (e) {
+      var k = e.key;
+      if (k === 'Escape') { e.preventDefault(); closePop(true); return; }
+      var day = e.target.closest && e.target.closest('.dp-day'); if (!day) return;
+      var step = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }[k];
+      if (step === undefined && k !== 'PageUp' && k !== 'PageDown') return;
+      e.preventDefault();
+      var cur = parseIso(day.getAttribute('data-iso')), target = null, n, t;
+      if (step !== undefined) {
+        for (n = 1; n <= 70; n++) { t = new Date(cur.getFullYear(), cur.getMonth(), cur.getDate() + step * n); if (okDay(iso(t))) { target = t; break; } if (iso(t) > dt.max || iso(t) < dt.min) break; }
+      } else {
+        t = new Date(cur.getFullYear(), cur.getMonth() + (k === 'PageUp' ? -1 : 1), cur.getDate());
+        for (n = 0; n <= 31; n++) { var c2 = new Date(t.getFullYear(), t.getMonth(), t.getDate() + n); if (okDay(iso(c2))) { target = c2; break; } }
+      }
+      if (!target) return;
+      view = new Date(target.getFullYear(), target.getMonth(), 1); focusIso = iso(target); render(); focusDay();
+    });
+    pop.addEventListener('focusout', function (e) { if (e.relatedTarget && !dpWrap.contains(e.relatedTarget)) closePop(false); });
+    document.addEventListener('click', function (e) { if (!dpWrap.contains(e.target)) closePop(false); });
+    dt.addEventListener('invalid', function () { dpWrap.classList.add('dp-invalid'); });
+    dt.addEventListener('change', dpSync);
+    bf.addEventListener('reset', function () { setTimeout(dpSync, 0); });
+    dpSync();
+
+    if (fTabs2.length) {
+      var panes = { enquire: $('#pane-enquire'), book: $('#pane-book') };
+      var showPane = function (k) {
+        fTabs2.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-pane') === k ? 'true' : 'false'); });
+        Object.keys(panes).forEach(function (x) { panes[x].hidden = x !== k; });
+      };
+      fTabs2.forEach(function (b) { b.addEventListener('click', function () { showPane(b.getAttribute('data-pane')); }); });
+      showPane(/[?&]sent=book/.test(location.search) ? 'book' : 'enquire');   // always opens on the enquiry tab
+    }
+  }
 })();

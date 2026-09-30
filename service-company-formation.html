@@ -10,10 +10,19 @@
 <meta property="og:description" content="Entity incorporation, mandatory registrations and foundational legal documents for new and expanding enterprises.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="AJ Associates">
+<meta property="og:image" content="https://ajassociatesonline.com/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="AJ Associates: Compliance done right. Growth made clear.">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://ajassociatesonline.com/service-company-formation.html">
 <meta property="og:url" content="https://ajassociatesonline.com/service-company-formation.html">
-<link rel="icon" href="assets/mark-dark.webp" type="image/webp">
-<link rel="preload" href="css/styles.css?v=32" as="style">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+
+<link rel="preload" href="css/styles.css?v=98" as="style">
 <link rel="preload" href="assets/fonts/playfair.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
 <script>
@@ -23,9 +32,20 @@
     if ((n.connection && n.connection.saveData) || (n.deviceMemory && n.deviceMemory <= 2) || (n.hardwareConcurrency && n.hardwareConcurrency <= 2)) c.add('lite');
   })(document, navigator);
 </script>
-<link rel="stylesheet" href="css/styles.css?v=32">
+<link rel="stylesheet" href="css/styles.css?v=98">
+<script>
+  /* First page of a visit only, and never on low-end / save-data / reduced-motion devices. */
+  (function (d, n, w) {
+    try {
+      var c = d.documentElement.classList;
+      if (c.contains('lite') || (w.matchMedia && w.matchMedia('(prefers-reduced-motion: reduce)').matches) || w.sessionStorage.getItem('aj-splash')) return;
+      w.sessionStorage.setItem('aj-splash', '1'); c.add('splash');
+    } catch (e) {}
+  })(document, navigator, window);
+</script>
 </head>
 <body>
+<div id="splash" aria-hidden="true"><div class="sp-in"><img class="sp-mark" src="assets/mark-light.webp" width="80" height="64" alt=""><p class="sp-word">AJ ASSOCIATES</p><span class="sp-line"></span><p class="sp-sub">Tax · Audit · Accounts</p></div></div>
 <a class="skip" href="#main">Skip to content</a>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -48,7 +68,7 @@
   <div class="wrap hdr-in">
     <a class="brand" href="index.html" aria-label="AJ Associates — home">
       <img src="assets/mark-dark.webp" width="40" height="32" alt="">
-      <span><b>AJ ASSOCIATES</b><small>Tax &amp; Management Consultancy</small></span>
+      <span><b>AJ ASSOCIATES<sup class="beta-tag" title="This website is under development">beta</sup></b><small>Tax &amp; Management Consultancy</small></span>
     </a>
     <button class="burger" id="burger" aria-expanded="false" aria-controls="nav" aria-label="Menu"><span></span><span></span><span></span></button>
     <nav class="nav" id="nav" aria-label="Main">
@@ -62,6 +82,7 @@
               <h3>Services</h3>
               <p class="sub">Everything you need, all in one place</p>
               <p>Integrated management consultancy across accounting, tax, legal, audit and compliance — built to support your business at every stage, in Kerala and across India.</p>
+              <a class="tlink" href="services.html#industries">Industries we serve <svg class="i"><use href="#i-arrow"/></svg></a>
             </div>
             <ul class="mega-list"><li><a href="service-taxation.html">Taxation &amp; Regulatory Advisory<svg class="i"><use href="#i-chevr"/></svg></a></li><li><a href="service-company-formation.html">Company Formation &amp; Legal Setup<svg class="i"><use href="#i-chevr"/></svg></a></li><li><a href="service-financial-management.html">Financial Management &amp; Auditing<svg class="i"><use href="#i-chevr"/></svg></a></li><li><a href="service-corporate-secretarial.html">Corporate Secretarial &amp; Governance<svg class="i"><use href="#i-chevr"/></svg></a></li><li><a href="service-lending-capital.html">Lending &amp; Capital Proposals<svg class="i"><use href="#i-chevr"/></svg></a></li><li><a href="service-business-strategy.html">Business Strategy &amp; Restructuring<svg class="i"><use href="#i-chevr"/></svg></a></li><li><a href="service-staffing-support.html">Outsourced Staffing &amp; Support<svg class="i"><use href="#i-chevr"/></svg></a></li></ul>
             <div class="mega-detail"><div class="mp"><h4>Taxation &amp; Regulatory Advisory</h4><p>End-to-end statutory compliance, advance tax planning and scrutiny representation before direct and indirect tax authorities.</p><a href="service-taxation.html">Show more <svg class="i"><use href="#i-arrow"/></svg></a></div><div class="mp"><h4>Company Formation &amp; Legal Setup</h4><p>Entity incorporation, mandatory registrations and foundational legal documents for new and expanding enterprises.</p><a href="service-company-formation.html">Show more <svg class="i"><use href="#i-arrow"/></svg></a></div><div class="mp"><h4>Financial Management &amp; Auditing</h4><p>Bookkeeping supervision, management reporting and independent audits that protect the health of the business.</p><a href="service-financial-management.html">Show more <svg class="i"><use href="#i-arrow"/></svg></a></div><div class="mp"><h4>Corporate Secretarial &amp; Governance</h4><p>ROC compliance, statutory registers, board governance support and annual meetings.</p><a href="service-corporate-secretarial.html">Show more <svg class="i"><use href="#i-arrow"/></svg></a></div><div class="mp"><h4>Lending &amp; Capital Proposals</h4><p>Structured debt proposals, CMA projections and bank loan syndication.</p><a href="service-lending-capital.html">Show more <svg class="i"><use href="#i-arrow"/></svg></a></div><div class="mp"><h4>Business Strategy &amp; Restructuring</h4><p>Restructuring, valuation, M&amp;A guidance and growth advisory for MSMEs and expanding enterprises.</p><a href="service-business-strategy.html">Show more <svg class="i"><use href="#i-arrow"/></svg></a></div><div class="mp"><h4>Outsourced Staffing &amp; Support</h4><p>Certified accounting staff, payroll processing and dedicated back-office management.</p><a href="service-staffing-support.html">Show more <svg class="i"><use href="#i-arrow"/></svg></a></div></div>
@@ -75,6 +96,8 @@
         <div class="menu">
           <a href="about.html#team">Our team</a>
           <a href="about.html#commitments">Our commitments</a>
+          <a href="faq.html">FAQs</a>
+          <a href="resources.html">Resources</a>
           <a href="index.html#approach">How we work</a>
           <a href="index.html#reviews">Testimonials</a>
         </div>
@@ -105,17 +128,38 @@
       <div class="svc-cta rv">
         <a class="btn btn-solid" href="https://wa.me/916282406091?text=Greetings!%20I%20am%20interested%20in%20Company%20Formation%20%26%20Legal%20Setup." target="_blank" rel="noopener">Enquire on WhatsApp <svg class="i"><use href="#i-arrow"/></svg></a>
         <a class="btn btn-ghost" href="packages.html">See packages</a>
+        <a class="btn btn-ghost" href="services.html#industries">Industries we serve</a>
       </div>
+      <a class="tlink svc-extra" href="service-company-formation.html#structure-quiz">Not sure which structure? Take the guide <svg class="i"><use href="#i-arrow"/></svg></a>
     </div>
     <aside class="svc-other rv" aria-label="Other services">
       <h3>Other services</h3>
       <ul><li><a href="service-taxation.html">Taxation &amp; Regulatory Advisory</a></li><li><a href="service-company-formation.html" aria-current="page">Company Formation &amp; Legal Setup</a></li><li><a href="service-financial-management.html">Financial Management &amp; Auditing</a></li><li><a href="service-corporate-secretarial.html">Corporate Secretarial &amp; Governance</a></li><li><a href="service-lending-capital.html">Lending &amp; Capital Proposals</a></li><li><a href="service-business-strategy.html">Business Strategy &amp; Restructuring</a></li><li><a href="service-staffing-support.html">Outsourced Staffing &amp; Support</a></li></ul>
+      <a class="tlink side-ind" href="services.html#industries">Industries we serve <svg class="i"><use href="#i-arrow"/></svg></a>
       <div class="side-cta">
         <h4>Not sure what you need?</h4>
         <p>Tell us about your business and our team will point you to the right service.</p>
         <a class="btn btn-brass btn-sm" href="contact.html">Book a consultation <svg class="i"><use href="#i-arrow"/></svg></a>
       </div>
     </aside>
+  </div>
+</section>
+
+<section class="sec structure" id="structure-quiz" aria-labelledby="sq-h">
+  <div class="wrap sq-grid">
+    <div class="rv">
+      <p class="eyebrow">Choosing a structure</p>
+      <h2 id="sq-h">Not sure which <em>structure suits you?</em></h2>
+      <p>Answer five quick questions and see the closest fit. Our team confirms it with you before anything is filed.</p>
+      <ul class="sq-cmp">
+        <li><b>Sole proprietorship</b><span>One owner, lowest cost and paperwork. Unlimited liability.</span></li>
+        <li><b>Partnership firm</b><span>Two or more owners, quick and simple. Unlimited liability.</span></li>
+        <li><b>One Person Company</b><span>One owner with limited liability and a company identity.</span></li>
+        <li><b>Limited Liability Partnership</b><span>Two or more owners, limited liability, lighter compliance.</span></li>
+        <li><b>Private Limited Company</b><span>Built for investors, credibility and growth. More compliance.</span></li>
+      </ul>
+    </div>
+    <div class="sq rv" id="sq" aria-live="polite"></div>
   </div>
 </section>
 
@@ -143,7 +187,7 @@
       </div>
       <div>
         <h4>Explore</h4>
-        <ul><li><a href="services.html">Services</a></li><li><a href="packages.html">Packages</a></li><li><a href="about.html">About us</a></li><li><a href="collab.html">Collab with us</a></li><li><a href="careers.html">Careers</a></li><li><a href="contact.html">Contact</a></li></ul>
+        <ul><li><a href="services.html">Services</a></li><li><a href="packages.html">Packages</a></li><li><a href="about.html">About us</a></li><li><a href="faq.html">FAQs</a></li><li><a href="resources.html">Resources</a></li><li><a href="collab.html">Collab with us</a></li><li><a href="careers.html">Careers</a></li><li><a href="contact.html">Contact</a></li></ul>
       </div>
       <div>
         <h4>Follow</h4>
@@ -156,7 +200,7 @@
       </div>
       <div>
         <h4>Careers</h4>
-        <p style="margin:0 0 .8rem">Accountants, tax consultants and article trainees — build your practice with us.</p>
+        <p style="margin:0 0 .8rem">Accountants, tax consultants and freshers — build your practice with us.</p>
         <ul>
           <li><a href="mailto:careers@ajassociatesonline.com?subject=Career%20Application%20-%20AJ%20Associates">careers@ajassociatesonline.com</a></li>
         </ul>
@@ -165,8 +209,11 @@
     <p class="ftr-mark" aria-hidden="true">AJ Associates</p>
     <div class="ftr-bot">
       <span>© <span id="yr">2026</span> AJ Associates. All rights reserved.</span>
-      <span>Kochi, Kerala · Mon – Sat, 9:30 AM – 6:30 PM</span>
+      <span class="ftr-legal"><a href="privacy.html">Privacy policy</a> · <a href="terms.html">Terms &amp; disclaimer</a> · <a href="privacy.html#grievances-and-complaints">Grievances</a></span>
+      <span class="ftr-ids">GSTIN: 32ACJFA1724A1Z7</span>
+      <span>Kochi, Kerala · Mon – Sat, 9 AM – 6 PM</span>
     </div>
+    <p class="beta-note">Beta version. This website is under development.</p>
   </div>
 </footer>
 
@@ -179,6 +226,6 @@
   <button class="chat-btn" id="chat-btn" type="button" aria-expanded="false" aria-controls="chat-menu" aria-label="Chat with us"><svg class="i i-c"><use href="#i-chat"/></svg><svg class="i i-x"><use href="#i-x"/></svg></button>
 </div>
 
-<script src="js/app.js?v=32" defer></script>
+<script src="js/app.js?v=98" defer></script>
 </body>
 </html>

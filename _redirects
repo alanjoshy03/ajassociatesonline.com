@@ -22,6 +22,10 @@ http://ajassociatesonline.com/*       https://ajassociatesonline.com/:splat   30
 /collab/ /collab 301!
 /careers/ /careers 301!
 /contact/ /contact 301!
+/faq/ /faq 301!
+/resources/ /resources 301!
+/privacy/ /privacy 301!
+/terms/ /terms 301!
 
 # Clean addresses work too (typed or shared) and the address bar stays exactly as typed
 /services                         /services.html                            200
@@ -37,6 +41,10 @@ http://ajassociatesonline.com/*       https://ajassociatesonline.com/:splat   30
 /collab                           /collab.html                              200
 /careers                          /careers.html                             200
 /contact                          /contact.html                             200
+/faq                              /faq.html                                 200
+/resources                        /resources.html                           200
+/privacy                          /privacy.html                             200
+/terms                            /terms.html                               200
 
 # Source folders and config are never public
 /tools/*        /404.html   404!

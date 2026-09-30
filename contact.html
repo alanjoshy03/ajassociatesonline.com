@@ -10,10 +10,19 @@
 <meta property="og:description" content="Book a consultation with AJ Associates. Visit our office in Chullickal, Kochi, call +91 81368 85152 or message us on WhatsApp.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="AJ Associates">
+<meta property="og:image" content="https://ajassociatesonline.com/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="AJ Associates: Compliance done right. Growth made clear.">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://ajassociatesonline.com/contact.html">
 <meta property="og:url" content="https://ajassociatesonline.com/contact.html">
-<link rel="icon" href="assets/mark-dark.webp" type="image/webp">
-<link rel="preload" href="css/styles.css?v=32" as="style">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+
+<link rel="preload" href="css/styles.css?v=98" as="style">
 <link rel="preload" href="assets/fonts/playfair.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
 <script>
@@ -23,9 +32,20 @@
     if ((n.connection && n.connection.saveData) || (n.deviceMemory && n.deviceMemory <= 2) || (n.hardwareConcurrency && n.hardwareConcurrency <= 2)) c.add('lite');
   })(document, navigator);
 </script>
-<link rel="stylesheet" href="css/styles.css?v=32">
+<link rel="stylesheet" href="css/styles.css?v=98">
+<script>
+  /* First page of a visit only, and never on low-end / save-data / reduced-motion devices. */
+  (function (d, n, w) {
+    try {
+      var c = d.documentElement.classList;
+      if (c.contains('lite') || (w.matchMedia && w.matchMedia('(prefers-reduced-motion: reduce)').matches) || w.sessionStorage.getItem('aj-splash')) return;
+      w.sessionStorage.setItem('aj-splash', '1'); c.add('splash');
+    } catch (e) {}
+  })(document, navigator, window);
+</script>
 </head>
 <body>
+<div id="splash" aria-hidden="true"><div class="sp-in"><img class="sp-mark" src="assets/mark-light.webp" width="80" height="64" alt=""><p class="sp-word">AJ ASSOCIATES</p><span class="sp-line"></span><p class="sp-sub">Tax · Audit · Accounts</p></div></div>
 <a class="skip" href="#main">Skip to content</a>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -48,7 +68,7 @@
   <div class="wrap hdr-in">
     <a class="brand" href="index.html" aria-label="AJ Associates — home">
       <img src="assets/mark-dark.webp" width="40" height="32" alt="">
-      <span><b>AJ ASSOCIATES</b><small>Tax &amp; Management Consultancy</small></span>
+      <span><b>AJ ASSOCIATES<sup class="beta-tag" title="This website is under development">beta</sup></b><small>Tax &amp; Management Consultancy</small></span>
     </a>
     <button class="burger" id="burger" aria-expanded="false" aria-controls="nav" aria-label="Menu"><span></span><span></span><span></span></button>
     <nav class="nav" id="nav" aria-label="Main">
@@ -62,6 +82,7 @@
               <h3>Services</h3>
               <p class="sub">Everything you need, all in one place</p>
               <p>Integrated management consultancy across accounting, tax, legal, audit and compliance — built to support your business at every stage, in Kerala and across India.</p>
+              <a class="tlink" href="services.html#industries">Industries we serve <svg class="i"><use href="#i-arrow"/></svg></a>
             </div>
             <ul class="mega-list"><li><a href="service-taxation.html">Taxation &amp; Regulatory Advisory<svg class="i"><use href="#i-chevr"/></svg></a></li><li><a href="service-company-formation.html">Company Formation &amp; Legal Setup<svg class="i"><use href="#i-chevr"/></svg></a></li><li><a href="service-financial-management.html">Financial Management &amp; Auditing<svg class="i"><use href="#i-chevr"/></svg></a></li><li><a href="service-corporate-secretarial.html">Corporate Secretarial &amp; Governance<svg class="i"><use href="#i-chevr"/></svg></a></li><li><a href="service-lending-capital.html">Lending &amp; Capital Proposals<svg class="i"><use href="#i-chevr"/></svg></a></li><li><a href="service-business-strategy.html">Business Strategy &amp; Restructuring<svg class="i"><use href="#i-chevr"/></svg></a></li><li><a href="service-staffing-support.html">Outsourced Staffing &amp; Support<svg class="i"><use href="#i-chevr"/></svg></a></li></ul>
             <div class="mega-detail"><div class="mp"><h4>Taxation &amp; Regulatory Advisory</h4><p>End-to-end statutory compliance, advance tax planning and scrutiny representation before direct and indirect tax authorities.</p><a href="service-taxation.html">Show more <svg class="i"><use href="#i-arrow"/></svg></a></div><div class="mp"><h4>Company Formation &amp; Legal Setup</h4><p>Entity incorporation, mandatory registrations and foundational legal documents for new and expanding enterprises.</p><a href="service-company-formation.html">Show more <svg class="i"><use href="#i-arrow"/></svg></a></div><div class="mp"><h4>Financial Management &amp; Auditing</h4><p>Bookkeeping supervision, management reporting and independent audits that protect the health of the business.</p><a href="service-financial-management.html">Show more <svg class="i"><use href="#i-arrow"/></svg></a></div><div class="mp"><h4>Corporate Secretarial &amp; Governance</h4><p>ROC compliance, statutory registers, board governance support and annual meetings.</p><a href="service-corporate-secretarial.html">Show more <svg class="i"><use href="#i-arrow"/></svg></a></div><div class="mp"><h4>Lending &amp; Capital Proposals</h4><p>Structured debt proposals, CMA projections and bank loan syndication.</p><a href="service-lending-capital.html">Show more <svg class="i"><use href="#i-arrow"/></svg></a></div><div class="mp"><h4>Business Strategy &amp; Restructuring</h4><p>Restructuring, valuation, M&amp;A guidance and growth advisory for MSMEs and expanding enterprises.</p><a href="service-business-strategy.html">Show more <svg class="i"><use href="#i-arrow"/></svg></a></div><div class="mp"><h4>Outsourced Staffing &amp; Support</h4><p>Certified accounting staff, payroll processing and dedicated back-office management.</p><a href="service-staffing-support.html">Show more <svg class="i"><use href="#i-arrow"/></svg></a></div></div>
@@ -75,6 +96,8 @@
         <div class="menu">
           <a href="about.html#team">Our team</a>
           <a href="about.html#commitments">Our commitments</a>
+          <a href="faq.html">FAQs</a>
+          <a href="resources.html">Resources</a>
           <a href="index.html#approach">How we work</a>
           <a href="index.html#reviews">Testimonials</a>
         </div>
@@ -94,15 +117,18 @@
       <div class="sec-head rv">
         <p class="eyebrow">Contact</p>
         <h1 class="h2">Let’s talk about <em>your business.</em></h1>
-        <p>Send a few details and we’ll pick it up on WhatsApp, or visit our office in Kochi.</p>
+        <p>Send a few details and we’ll get back to you, or visit our office in Kochi.</p>
       </div>
       <figure class="art art-talk rv"><img src="assets/art-talk.webp" width="748" height="564" loading="lazy" decoding="async" alt="An advisor on a call at her desk, with a tablet, rupee coins, an idea bulb and a briefcase around her"></figure>
     </div>
     <div class="contact-grid">
       <div class="f-wrap rv">
+        <div class="f-tabs" role="group" aria-label="How would you like to reach us?"><button type="button" aria-pressed="true" data-pane="enquire">Send an enquiry</button><button type="button" aria-pressed="false" data-pane="book">Book a consultation</button></div>
+        <div class="f-pane" id="pane-enquire">
         <h3>Send an enquiry</h3>
         <p>We usually respond within one working day.</p>
-        <form class="f" id="cform" novalidate>
+        <form class="f" id="cform" name="contact" method="POST" action="/contact?sent=1" data-netlify="true" netlify-honeypot="website" novalidate>
+          <input type="hidden" name="form-name" value="contact">
           <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
           <div><label for="c-name">Full name *</label><input id="c-name" name="name" required autocomplete="name"></div>
           <div class="f2">
@@ -120,9 +146,37 @@
               <option>Outsourced Staffing &amp; Payroll</option>
             </select></div>
           <div><label for="c-msg">Your requirements *</label><textarea id="c-msg" name="msg" required placeholder="Briefly describe what you need…"></textarea></div>
-          <button class="btn btn-solid" type="submit"><svg class="i"><use href="#i-wa"/></svg> Continue on WhatsApp</button>
+          <button class="btn btn-solid" type="submit">Send enquiry <svg class="i"><use href="#i-arrow"/></svg></button>
+          <p class="f-note">We use your details only to reply to your enquiry. See our <a href="privacy.html">Privacy policy</a>.</p>
           <p class="msg" role="status"></p>
         </form>
+        </div>
+        <div class="f-pane" id="pane-book">
+        <h3>Book a consultation</h3>
+        <p>Choose a day and a one-hour slot, Monday to Saturday. We are closed on public and regional holidays, and we will confirm your slot by phone, email or WhatsApp.</p>
+        <p class="cl-next" id="cl-next" hidden></p>
+        <form class="f" id="bform" name="booking" method="POST" action="/contact?sent=book" data-netlify="true" netlify-honeypot="website" novalidate>
+          <input type="hidden" name="form-name" value="booking">
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div class="f2">
+            <div><label for="b-name">Full name *</label><input id="b-name" name="name" required autocomplete="name"></div>
+            <div><label for="b-tel">Mobile *</label><input id="b-tel" name="tel" type="tel" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" placeholder="10-digit number" required autocomplete="tel-national"></div>
+          </div>
+          <div class="f2">
+            <div><label for="b-mail">Email</label><input id="b-mail" name="mail" type="email" autocomplete="email"></div>
+            <div><label for="b-svc">Service *</label><select id="b-svc" name="svc" required><option value="">Choose a category…</option><option>Accounting &amp; Auditing</option><option>Taxation &amp; GST Compliance</option><option>Loans &amp; Capital Proposals</option><option>Company Formation &amp; Legal Setup</option><option>Business Strategy &amp; Restructuring</option><option>Outsourced Staffing &amp; Payroll</option><option>Not sure yet</option></select></div>
+          </div>
+          <div class="f2">
+            <div><label for="b-date">Preferred date *</label><input id="b-date" name="date" type="date" required></div>
+            <div><label for="b-slot">Preferred time *</label><select id="b-slot" name="slot" required><option value="">Choose a slot…</option><option>9:00 – 10:00 AM</option><option>10:00 – 11:00 AM</option><option>11:00 AM – 12:00 PM</option><option>12:00 – 1:00 PM</option><option>1:00 – 2:00 PM</option><option>2:00 – 3:00 PM</option><option>3:00 – 4:00 PM</option><option>4:00 – 5:00 PM</option><option>5:00 – 6:00 PM</option></select></div>
+          </div>
+          <div><label for="b-mode">How would you like to meet? *</label><select id="b-mode" name="mode" required><option value="">Choose…</option><option>Visit our office in Kochi</option><option>Phone call</option><option>Video call</option></select></div>
+          <div><label for="b-note">Anything we should know? (optional)</label><textarea id="b-note" name="note" placeholder="A line or two is plenty."></textarea></div>
+          <button class="btn btn-solid" type="submit">Request this slot <svg class="i"><use href="#i-arrow"/></svg></button>
+          <p class="f-note">We use your details only to arrange your consultation. See our <a href="privacy.html">Privacy policy</a>.</p>
+          <p class="msg" role="status"></p>
+        </form>
+        </div>
       </div>
 
       <div class="info rv">
@@ -130,7 +184,7 @@
           <div class="row"><svg class="i"><use href="#i-pin"/></svg><div><dt>Registered office</dt><dd>Second Floor, 10/1329 G, Bivera, Chullickal Road, Near St. Joseph’s Bethlehem Church, Chullickal, Kochi, Kerala – 682006</dd></div></div>
           <div class="row"><svg class="i"><use href="#i-phone"/></svg><div><dt>Phone</dt><dd><a href="tel:+918136885152">+91 81368 85152</a></dd></div></div>
           <div class="row"><svg class="i"><use href="#i-mail"/></svg><div><dt>Email</dt><dd><a href="mailto:info@ajassociatesonline.com">info@ajassociatesonline.com</a></dd></div></div>
-          <div class="row"><svg class="i"><use href="#i-clock"/></svg><div><dt>Office hours</dt><dd>Mon – Sat, 9:30 AM – 6:30 PM IST<small>Closed on Sundays and public holidays</small></dd></div></div>
+          <div class="row"><svg class="i"><use href="#i-clock"/></svg><div><dt>Office hours</dt><dd>Mon – Sat, 9:00 AM – 6:00 PM IST<small>Closed on Sundays and public holidays</small></dd></div></div>
         </dl>
         <div class="map">
           <iframe title="AJ Associates office map" src="https://maps.google.com/maps?q=A+J+Associates,+10/1329+G,+Bivera,+Chullickal+Road,+Kochi,+Kerala&z=15&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -140,6 +194,7 @@
     </div>
   </div>
 </section>
+<script type="application/json" id="holidays">{"2026-10-02": "Gandhi Jayanti", "2026-10-19": "Maha Navami", "2026-10-20": "Vijayadashami", "2026-11-08": "Diwali", "2026-12-25": "Christmas", "2027-01-26": "Republic Day", "2027-03-26": "Good Friday", "2027-04-14": "Dr. Ambedkar Jayanti", "2027-05-01": "May Day", "2027-08-15": "Independence Day", "2027-10-02": "Gandhi Jayanti", "2027-12-25": "Christmas"}</script>
 
 </main>
 
@@ -152,7 +207,7 @@
       </div>
       <div>
         <h4>Explore</h4>
-        <ul><li><a href="services.html">Services</a></li><li><a href="packages.html">Packages</a></li><li><a href="about.html">About us</a></li><li><a href="collab.html">Collab with us</a></li><li><a href="careers.html">Careers</a></li><li><a href="contact.html">Contact</a></li></ul>
+        <ul><li><a href="services.html">Services</a></li><li><a href="packages.html">Packages</a></li><li><a href="about.html">About us</a></li><li><a href="faq.html">FAQs</a></li><li><a href="resources.html">Resources</a></li><li><a href="collab.html">Collab with us</a></li><li><a href="careers.html">Careers</a></li><li><a href="contact.html">Contact</a></li></ul>
       </div>
       <div>
         <h4>Follow</h4>
@@ -165,7 +220,7 @@
       </div>
       <div>
         <h4>Careers</h4>
-        <p style="margin:0 0 .8rem">Accountants, tax consultants and article trainees — build your practice with us.</p>
+        <p style="margin:0 0 .8rem">Accountants, tax consultants and freshers — build your practice with us.</p>
         <ul>
           <li><a href="mailto:careers@ajassociatesonline.com?subject=Career%20Application%20-%20AJ%20Associates">careers@ajassociatesonline.com</a></li>
         </ul>
@@ -174,8 +229,11 @@
     <p class="ftr-mark" aria-hidden="true">AJ Associates</p>
     <div class="ftr-bot">
       <span>© <span id="yr">2026</span> AJ Associates. All rights reserved.</span>
-      <span>Kochi, Kerala · Mon – Sat, 9:30 AM – 6:30 PM</span>
+      <span class="ftr-legal"><a href="privacy.html">Privacy policy</a> · <a href="terms.html">Terms &amp; disclaimer</a> · <a href="privacy.html#grievances-and-complaints">Grievances</a></span>
+      <span class="ftr-ids">GSTIN: 32ACJFA1724A1Z7</span>
+      <span>Kochi, Kerala · Mon – Sat, 9 AM – 6 PM</span>
     </div>
+    <p class="beta-note">Beta version. This website is under development.</p>
   </div>
 </footer>
 
@@ -188,6 +246,6 @@
   <button class="chat-btn" id="chat-btn" type="button" aria-expanded="false" aria-controls="chat-menu" aria-label="Chat with us"><svg class="i i-c"><use href="#i-chat"/></svg><svg class="i i-x"><use href="#i-x"/></svg></button>
 </div>
 
-<script src="js/app.js?v=32" defer></script>
+<script src="js/app.js?v=98" defer></script>
 </body>
 </html>
