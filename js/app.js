@@ -7,16 +7,16 @@
   var WA = '916282406091';
   var lite = document.documentElement.classList.contains('lite');
 
-  /* ---- first-visit loading screen: lifts once the page has loaded (never before ~2s, never after 4.5s) ---- */
+  /* ---- first-visit loading screen: lifts once the page has loaded (shown for at least ~2s, never more than 4.5s after it appears) ---- */
   var root = document.documentElement, sp = $('#splash');
   if (sp && root.classList.contains('splash')) {
-    var spDone = false;
+    var spDone = false, spStart = performance.now();   // count the 2 seconds from when the screen is up, not from when the request began
     var spHide = function () {
       if (spDone) return; spDone = true;
       setTimeout(function () {
         sp.classList.add('go');
         setTimeout(function () { root.classList.remove('splash'); sp.parentNode && sp.parentNode.removeChild(sp); }, 700);
-      }, Math.max(0, 2000 - performance.now()));
+      }, Math.max(0, 2000 - (performance.now() - spStart)));
     };
     if (document.readyState === 'complete') spHide(); else window.addEventListener('load', spHide);
     setTimeout(spHide, 4500);
@@ -36,12 +36,15 @@
   var burger = $('#burger'), nav = $('#nav');
   function closeNav() {
     nav.classList.remove('open'); burger.setAttribute('aria-expanded', 'false');
+    document.documentElement.classList.remove('nav-open');
     $$('.dd.open', nav).forEach(function (d) { d.classList.remove('open'); });
   }
   burger.addEventListener('click', function () {
     var open = nav.classList.toggle('open');
     burger.setAttribute('aria-expanded', open);
+    document.documentElement.classList.toggle('nav-open', open);      // the page behind the open menu does not scroll
   });
+  window.addEventListener('resize', function () { if (window.innerWidth > 1059 && document.documentElement.classList.contains('nav-open')) closeNav(); });
   nav.addEventListener('click', function (e) {
     var b = e.target.closest('.dd-btn');
     if (b) {                                                   // phone: expand / collapse a group
@@ -589,6 +592,7 @@
   /* ---- package finder ---- */
   var form = $('#finder');
   if (form) {
+    form.addEventListener('submit', function (e) { e.preventDefault(); });   // (an inline handler would be blocked by the content security policy)
     var PK = {
       individual: ['Individual & NRI Tax Filing', 'Personal tax scope', [
         'Income Tax Return (ITR-1 / 2 / 3) e-filing', 'Form 26AS & AIS data reconciliation',

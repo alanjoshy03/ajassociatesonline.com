@@ -12,7 +12,7 @@ import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PART = os.path.join(ROOT, 'tools', 'partials')
-V = '139'   # bump to force browsers to re-download css/js after a change
+V = '147'   # bump to force browsers to re-download css/js after a change
 
 def part(name):
     with open(os.path.join(PART, name + '.html'), encoding='utf-8') as f:
@@ -345,11 +345,23 @@ def cleanurls(html):
     return re.sub(r'href="(/[^"#?]*\.html)([#?][^"]*)?"', fix, html)
 
 
+def fix_heading_levels(html):
+    """Screen-reader users move by heading level, so a level is never skipped (h1 straight to h3 and so on).
+    The look stays as designed; only the announced level (aria-level) is corrected where needed."""
+    prev = [0]
+    def f(m):
+        n, attrs = int(m.group(1)), m.group(2)
+        eff = min(n, prev[0] + 1) if prev[0] else n
+        prev[0] = eff
+        return m.group(0) if eff == n or 'aria-level' in attrs else f'<h{n}{attrs} aria-level="{eff}">'
+    return re.sub(r'<h([1-6])([^>]*)>', f, html)
+
+
 def page(filename, cur, title, desc, body, extra_head=''):
     canonical = SITE + clean_path(filename)
     html = (head(title, desc, extra_head + SPLASH_JS + page_ld(filename), canonical) + '<body>\n' + SPLASH + '\n' + NOSCRIPT + '\n<a class="skip" href="#main">Skip to content</a>\n\n'
             + SPRITE + '\n\n' + header(cur) + '\n<main id="main">\n\n' + body.strip() + '\n\n</main>\n\n' + footer())
-    html = cleanurls(absolutize(html))     # served at /services/taxation etc., so every link and file path must be root-absolute
+    html = fix_heading_levels(cleanurls(absolutize(html)))     # served at /services/taxation etc., so every link and file path must be root-absolute
     with open(os.path.join(ROOT, filename), 'w', encoding='utf-8') as f:
         f.write(html)
     print('  wrote', filename, f'({len(html)//1024} KB)')
@@ -434,7 +446,7 @@ def build_home():
     approach = opt_in(part('approach'), '<section class="approach on-dark" aria-labelledby="ap-h">', '<section class="approach on-dark" id="approach" aria-labelledby="ap-h">')
     body = '\n\n'.join([hero, part('band'), part('ask'), services, approach, part('reviews'), CTA])
     page('index.html', 'home', 'AJ Associates | Tax, Audit &amp; Management Consultancy in Kochi, Kerala',
-         'AJ Associates is a tax, audit and management consultancy in Kochi, Kerala — GST, Income Tax, accounting, company formation, bank loan proposals and corporate compliance, led by our experienced team.',
+         'Tax, audit and management consultancy in Kochi, Kerala: GST, income tax, accounting, company formation, bank loan proposals and compliance.',
          fix_links(body, 'index.html'))
 
 SVC_ART = {
@@ -499,7 +511,7 @@ def build_services_index():
                      f'<div class="cta-row"><a class="btn btn-brass" href="contact.html">Book a consultation {ARROW}</a><a class="btn btn-ghost" href="packages.html">Find your package</a></div>')
     body += '\n\n' + svc_index_section() + '\n\n' + part('industries') + '\n\n' + CTA
     page('services.html', 'services', 'Services | AJ Associates — Tax, Audit, Company Law &amp; Advisory, Kochi',
-         'Taxation, company formation, financial management and audit, corporate secretarial, bank loan proposals, business strategy and outsourced staffing for every industry — all under one roof in Kochi, Kerala.',
+         'Taxation, company formation, audit, corporate secretarial, bank loan proposals, strategy and staffing for every industry, in Kochi, Kerala.',
          body)
 
 def build_service_pages():
@@ -828,7 +840,7 @@ def build_faq():
                      'Straight answers to what clients ask us most about tax, GST, companies and accounts. Can’t find yours? We’ll answer it personally.')
     cta = (CTA.replace('Let’s talk', 'Still have a question?')
               .replace('Precision in every filing. <em>Confidence in every decision.</em>', 'We’ll answer it <em>personally.</em>'))
-    page('faq.html', 'faq', 'FAQs | AJ Associates — tax, GST, company and accounts questions answered',
+    page('faq.html', 'faq', 'FAQs | AJ Associates — tax, GST, company and accounts answers',
          'Answers to common questions about income tax returns, GST, notices, company formation, audit and working with AJ Associates in Kochi.',
          hero + '\n\n' + part('faq') + '\n\n' + cta)
 
@@ -856,7 +868,7 @@ def absolutize(html):
 def special_page(filename, title, desc, body):
     html = (head(title, desc, '', None, 'noindex, nofollow') + '<body>\n\n' + SPRITE + '\n\n' + header(None)
             + '\n<main id="main">\n\n' + body.strip() + '\n\n</main>\n\n' + footer())
-    html = cleanurls(absolutize(html))
+    html = fix_heading_levels(cleanurls(absolutize(html)))
     with open(os.path.join(ROOT, filename), 'w', encoding='utf-8') as f:
         f.write(html)
     print('  wrote', filename, f'({len(html)//1024} KB)')
