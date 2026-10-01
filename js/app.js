@@ -7,7 +7,7 @@
   var WA = '916282406091';
   var lite = document.documentElement.classList.contains('lite');
 
-  /* ---- first-visit loading screen: lifts once the page has loaded (never before ~1.1s, never after 3.5s) ---- */
+  /* ---- first-visit loading screen: lifts once the page has loaded (never before ~2s, never after 4.5s) ---- */
   var root = document.documentElement, sp = $('#splash');
   if (sp && root.classList.contains('splash')) {
     var spDone = false;
@@ -16,10 +16,10 @@
       setTimeout(function () {
         sp.classList.add('go');
         setTimeout(function () { root.classList.remove('splash'); sp.parentNode && sp.parentNode.removeChild(sp); }, 700);
-      }, Math.max(0, 1100 - performance.now()));
+      }, Math.max(0, 2000 - performance.now()));
     };
     if (document.readyState === 'complete') spHide(); else window.addEventListener('load', spHide);
-    setTimeout(spHide, 3500);
+    setTimeout(spHide, 4500);
   }
 
   /* ---- content protection: no selecting, copying, dragging or right-click menu (typing in form fields is untouched) ---- */
@@ -49,12 +49,19 @@
       b.setAttribute('aria-expanded', open);
       return;
     }
+    var head = e.target.closest('.dd-t');
+    if (head && window.matchMedia('(max-width:1059px)').matches) {   // phone: the whole row expands its list
+      e.preventDefault();
+      var g = head.parentNode, o = g.classList.toggle('open');
+      var gb = $('.dd-btn', g); if (gb) gb.setAttribute('aria-expanded', o);
+      return;
+    }
     if (e.target.closest('a')) closeNav();
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeNav(); });
 
   $$('.mega').forEach(function (m) {                            // hovering / focusing a service previews it
-    var items = $$('.mega-list a', m), panels = $$('.mp', m);
+    var items = $$('.mega-list li:not(.mega-all) a', m), panels = $$('.mp', m);
     function show(i) {
       items.forEach(function (a, k) { a.classList.toggle('on', k === i); });
       panels.forEach(function (p, k) { p.classList.toggle('on', k === i); });
@@ -63,6 +70,8 @@
       a.addEventListener('mouseenter', function () { show(i); });
       a.addEventListener('focus', function () { show(i); });
     });
+    var seeAll = $('.mega-all a', m);                           // "See all services": its own highlight replaces the row highlight
+    if (seeAll) ['mouseenter', 'focus'].forEach(function (ev) { seeAll.addEventListener(ev, function () { items.forEach(function (x) { x.classList.remove('on'); }); }); });
     show(0);
   });
 
@@ -142,6 +151,9 @@
       calc();
     }
   }
+
+  /* ---- Home services: all collapsed on phones ---- */
+  if (window.matchMedia('(max-width:899px)').matches) $$('.acc details[open]').forEach(function (d) { d.removeAttribute('open'); });
 
   /* ---- services index: hover/focus previews on desktop, tap-to-open rows on phones ---- */
   var sx = $('.sx-list');
@@ -337,7 +349,84 @@
       card.classList.toggle('done', n === boxes.length);
     };
     boxes.forEach(function (b) { b.addEventListener('change', upd); });
+
   });
+
+  /* ---- resources: show the first checklist cards, and the rest on "See all" ---- */
+  var chkAll = $('.chk-all');
+  if (chkAll) {
+    var chkCards = $$('.chk-card', chkAll), chkTotal = chkCards.length;
+    var chkBtn = document.createElement('button');
+    chkBtn.type = 'button'; chkBtn.className = 'chk-seeall'; chkBtn.setAttribute('aria-expanded', 'false'); chkBtn.setAttribute('aria-controls', 'chk-all');
+    var chkFabUpdate = null;
+    var chkWide = function () { return window.matchMedia('(min-width:900px)').matches; };
+    var chkFit = function () {
+      if (chkAll.classList.contains('open')) { chkAll.style.maxHeight = ''; return; }
+      var n = chkWide() ? 2 : 1, last = chkCards[n - 1], top = chkAll.getBoundingClientRect().top;
+      chkAll.style.maxHeight = (last.getBoundingClientRect().bottom - top - 24) + 'px';
+    };
+    var chkSet = function (open) {
+      chkAll.classList.toggle('open', open);
+      chkWrap.classList.toggle('open', open);
+      if (chkFabUpdate) chkFabUpdate();
+      chkBtn.setAttribute('aria-expanded', open);
+      chkBtn.textContent = open ? 'Show fewer' : 'See all ' + chkTotal + ' checklists';
+      var n = chkWide() ? 2 : 1;
+      chkCards.forEach(function (c, i) { if (i >= n) { if (open) c.removeAttribute('inert'); else c.setAttribute('inert', ''); } });
+      $$('.chk-gh', chkAll).forEach(function (h) { if (open) h.removeAttribute('inert'); });
+      chkFit();
+    };
+    chkAll.id = 'chk-all';
+    var chkWrap = document.createElement('div');                  // holds the list, the feathered fade and the button
+    chkWrap.className = 'chk-wrap fold';
+    chkAll.parentNode.insertBefore(chkWrap, chkAll);
+    chkWrap.appendChild(chkAll); chkWrap.appendChild(chkBtn);
+    chkAll.classList.add('fold');
+    var chkHash = function () { return location.hash.length > 1 && !!document.getElementById(decodeURIComponent(location.hash.slice(1))) && chkAll.contains(document.getElementById(decodeURIComponent(location.hash.slice(1)))); };
+    chkSet(chkHash());
+    chkBtn.addEventListener('click', function () {
+      var open = !chkAll.classList.contains('open');
+      chkSet(open);
+      if (!open) { var r = chkAll.getBoundingClientRect(); if (r.top < 0) chkAll.scrollIntoView({ block: 'start' }); }
+    });
+    document.addEventListener('click', function (e) {              // links to a checklist or group (jump row, other pages) open the lot first
+      var a = e.target.closest('a[href^="#"]');
+      if (!a || chkAll.classList.contains('open')) return;
+      var t = a.getAttribute('href').length > 1 && document.getElementById(a.getAttribute('href').slice(1));
+      if (t && chkAll.contains(t)) chkSet(true);
+    });
+    /* a floating "Jump to" button while you are down in the cards: one observer, no scroll handler */
+    var jumpRow = $('.chk-jump-in');
+    if (jumpRow && window.IntersectionObserver) {
+      var fab = document.createElement('div');
+      fab.className = 'chk-fab'; fab.setAttribute('aria-label', 'Jump to a checklist group');
+      var rowLinks = $$('a', jumpRow);
+      fab.innerHTML = '<button type="button" class="chk-fab-btn" aria-expanded="false" aria-controls="chk-fab-menu"><span class="cur">' + rowLinks[0].textContent + '</span></button>' +
+        '<ul class="chk-fab-menu" id="chk-fab-menu" hidden>' + rowLinks.map(function (a) { return '<li><a href="' + a.getAttribute('href') + '">' + a.textContent + '</a></li>'; }).join('') + '</ul>';
+      document.body.appendChild(fab);
+      var fBtn = $('.chk-fab-btn', fab), fMenu = $('.chk-fab-menu', fab), fCur = $('.cur', fBtn), fLinks = $$('a', fMenu);
+      var fOpen = function (o) { fMenu.hidden = !o; fBtn.setAttribute('aria-expanded', o); };
+      fBtn.addEventListener('click', function () { fOpen(fMenu.hidden); });
+      fMenu.addEventListener('click', function (e) { if (e.target.closest('a')) fOpen(false); });
+      document.addEventListener('click', function (e) { if (!fMenu.hidden && !fab.contains(e.target)) fOpen(false); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !fMenu.hidden) { fOpen(false); fBtn.focus(); } });
+      var seen = {}, vis = { wrap: false, row: true };
+      var show = function () { var on = vis.wrap && !vis.row && chkAll.classList.contains('open'); fab.classList.toggle('on', on); if (!on) fOpen(false); };
+      chkFabUpdate = show;
+      new IntersectionObserver(function (es) { vis.wrap = es[es.length - 1].isIntersecting; show(); }).observe(chkWrap);
+      new IntersectionObserver(function (es) { vis.row = es[es.length - 1].isIntersecting; show(); }).observe(jumpRow);
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { seen[e.target.id] = e.isIntersecting; });
+        var cur = null;
+        $$('.chk-group', chkAll).forEach(function (g) { if (!cur && seen[g.id]) cur = g.id; });
+        if (!cur) return;
+        fLinks.forEach(function (l) { var on = l.getAttribute('href') === '#' + cur; if (on) { l.setAttribute('aria-current', 'true'); fCur.textContent = l.textContent; } else l.removeAttribute('aria-current'); });
+      }, { rootMargin: '-30% 0px -55% 0px' });
+      $$('.chk-group', chkAll).forEach(function (g) { io.observe(g); });
+    }
+    var chkRt; window.addEventListener('resize', function () { clearTimeout(chkRt); chkRt = setTimeout(chkFit, 150); });
+    if (window.ResizeObserver) new ResizeObserver(function () { if (!chkAll.classList.contains('open')) chkFit(); }).observe(chkCards[0]);
+  }
 
   /* ---- resources: arrows for the pinned-notes board ---- */
   var nbRail = $('.nb-rail');
@@ -423,6 +512,10 @@
     if (sel.form) sel.form.addEventListener('reset', function () { setTimeout(sync, 0); });
     sync();
   });
+
+  /* ---- printing: open every answer first, put them back afterwards ---- */
+  window.addEventListener('beforeprint', function () { $$('details').forEach(function (d) { d.setAttribute('data-was', d.open ? '1' : '0'); d.open = true; }); });
+  window.addEventListener('afterprint', function () { $$('details[data-was]').forEach(function (d) { d.open = d.getAttribute('data-was') === '1'; d.removeAttribute('data-was'); }); });
 
   /* ---- reveal on scroll ---- */
   if ('IntersectionObserver' in window && !lite) {
@@ -562,7 +655,7 @@
   };
   var cf = $('#cform'), pf = $('#pform');
   if (cf) sendForm(cf, 'Thank you. Your enquiry has reached our team, and we usually reply within one working day.');
-  if (pf) sendForm(pf, 'Thank you. Your proposal has reached our partner desk, and we will be in touch.');
+  if (pf) sendForm(pf, 'Thank you. Your proposal has reached our team, and we will be in touch.');
 
   /* ---- contact: enquiry / booking tabs, and the booking form's date rules (no Sundays) ---- */
   var bf = $('#bform'), fTabs2 = $$('.f-tabs button');

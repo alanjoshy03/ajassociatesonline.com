@@ -12,7 +12,7 @@ import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PART = os.path.join(ROOT, 'tools', 'partials')
-V = '104'   # bump to force browsers to re-download css/js after a change
+V = '139'   # bump to force browsers to re-download css/js after a change
 
 def part(name):
     with open(os.path.join(PART, name + '.html'), encoding='utf-8') as f:
@@ -31,16 +31,29 @@ FIRM_IDS = {'GSTIN': '32ACJFA1724A1Z7', 'Firm registration no.': '', 'ICAI FRN':
 # The booking form will not accept these dates. Add each year's dates (Onam, Vishu, Eid and so on move every year).
 HOLIDAYS = {
     '2026-10-02': 'Gandhi Jayanti',
-    '2026-10-19': 'Maha Navami',
-    '2026-10-20': 'Vijayadashami',
+    '2026-10-20': 'Maha Navami',
+    '2026-10-21': 'Vijayadashami',
     '2026-11-08': 'Diwali',
     '2026-12-25': 'Christmas',
+    '2027-01-02': 'Mannam Jayanti',
     '2027-01-26': 'Republic Day',
+    '2027-03-06': 'Maha Shivaratri',
+    '2027-03-10': 'Id-ul Fitr (Ramzan)',
+    '2027-03-25': 'Maundy Thursday',
     '2027-03-26': 'Good Friday',
     '2027-04-14': 'Dr. Ambedkar Jayanti',
+    '2027-04-15': 'Vishu',
     '2027-05-01': 'May Day',
+    '2027-05-17': "Id-ul Ad'ha (Bakrid)",
     '2027-08-15': 'Independence Day',
+    '2027-08-17': 'Sree Narayana Guru Jayanti',
+    '2027-09-11': 'First Onam',
+    '2027-09-12': 'Thiruvonam',
+    '2027-09-21': 'Sree Narayana Guru Samadhi',
     '2027-10-02': 'Gandhi Jayanti',
+    '2027-10-09': 'Maha Navami',
+    '2027-10-10': 'Vijayadashami',
+    '2027-10-29': 'Diwali',
     '2027-12-25': 'Christmas',
 }
 PHONE_TEL = '+918136885152'
@@ -88,9 +101,57 @@ SPRITE = '''<svg width="0" height="0" style="position:absolute" aria-hidden="tru
   <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.500l2.900 6.100 6.600.8-4.900 4.600 1.300 6.600L12 17.300l-5.900 3.300 1.300-6.600L2.500 9.400l6.600-.8z"/></symbol>
 </svg>'''
 
-JSON_LD = '''<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"ProfessionalService","name":"AJ Associates","description":"Tax, audit and management consultancy","url":"https://ajassociatesonline.com","email":"info@ajassociatesonline.com","telephone":"+918136885152","address":{"@type":"PostalAddress","streetAddress":"Second Floor, 10/1329 G, Bivera, Chullickal Road","addressLocality":"Kochi","addressRegion":"Kerala","postalCode":"682006","addressCountry":"IN"},"openingHours":"Mo-Sa 09:00-18:00","aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","bestRating":"5"}}
-</script>'''
+import json
+import html as html_lib
+ORG_ID = SITE + '/#org'
+SOCIAL = ['https://linkedin.com/in/ajassociatesonline', 'https://twitter.com/ajass0ciates', 'https://facebook.com/ajassociatesonline', 'https://instagram.com/ajassociatesonline']
+PAGE_NAMES = {'services.html': 'Services', 'packages.html': 'Packages', 'about.html': 'About us', 'collab.html': 'Collab with us', 'careers.html': 'Careers',
+              'contact.html': 'Contact', 'faq.html': 'FAQs', 'resources.html': 'Resources', 'updates.html': 'Updates', 'privacy.html': 'Privacy policy',
+              'terms.html': 'Terms and disclaimer', 'accessibility.html': 'Accessibility statement'}
+
+
+def ld_script(graph):
+    return '<script type="application/ld+json">\n' + json.dumps({'@context': 'https://schema.org', '@graph': graph}, ensure_ascii=False, separators=(',', ':')) + '\n</script>\n'
+
+
+def org_graph():
+    unesc = lambda t: re.sub(r'<[^>]+>', '', t).replace('&amp;', '&')
+    org = {
+        '@type': ['ProfessionalService', 'LocalBusiness'], '@id': ORG_ID, 'name': 'AJ Associates', 'url': SITE + '/',
+        'logo': SITE + '/icon-512.png', 'image': SITE + '/assets/og-image.jpg',
+        'description': 'Tax, audit and management consultancy in Kochi, Kerala: taxation, GST, accounts, audit, company formation and compliance.',
+        'email': INFO, 'telephone': PHONE_TEL,
+        'address': {'@type': 'PostalAddress', 'streetAddress': 'Second Floor, 10/1329 G, Bivera, Chullickal Road', 'addressLocality': 'Kochi', 'addressRegion': 'Kerala', 'postalCode': '682006', 'addressCountry': 'IN'},
+        'openingHoursSpecification': [{'@type': 'OpeningHoursSpecification', 'dayOfWeek': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'], 'opens': '09:00', 'closes': '18:00'}],
+        'areaServed': [{'@type': 'State', 'name': 'Kerala'}, {'@type': 'Country', 'name': 'India'}],
+        'sameAs': SOCIAL,
+        'hasOfferCatalog': {'@type': 'OfferCatalog', 'name': 'Services', 'itemListElement': [
+            {'@type': 'Offer', 'itemOffered': {'@type': 'Service', 'name': unesc(s['title']), 'url': SITE + clean_path(s['file'])}} for s in SERVICES]},
+    }
+    if FIRM_IDS.get('GSTIN'):
+        org['taxID'] = FIRM_IDS['GSTIN']
+    site = {'@type': 'WebSite', '@id': SITE + '/#website', 'url': SITE + '/', 'name': 'AJ Associates', 'inLanguage': 'en-IN', 'publisher': {'@id': ORG_ID}}
+    return [org, site]
+
+
+def page_ld(filename):
+    """Breadcrumbs for every inner page, plus the organisation graph on the home page and a Service entry on service pages."""
+    unesc = lambda t: re.sub(r'<[^>]+>', '', t).replace('&amp;', '&')
+    if filename == 'index.html':
+        return ld_script(org_graph())
+    crumbs = [('Home', SITE + '/')]
+    graph = []
+    svc = next((s for s in SERVICES if s['file'] == filename), None)
+    if svc:
+        crumbs += [('Services', SITE + '/services'), (unesc(svc['title']), SITE + clean_path(filename))]
+        graph.append({'@type': 'Service', 'name': unesc(svc['title']), 'description': unesc(svc['lead']), 'url': SITE + clean_path(filename),
+                      'provider': {'@id': ORG_ID}, 'areaServed': [{'@type': 'State', 'name': 'Kerala'}, {'@type': 'Country', 'name': 'India'}]})
+    elif filename in PAGE_NAMES:
+        crumbs.append((PAGE_NAMES[filename], SITE + clean_path(filename)))
+    else:
+        return ''
+    graph.append({'@type': 'BreadcrumbList', 'itemListElement': [{'@type': 'ListItem', 'position': n + 1, 'name': nm, 'item': u} for n, (nm, u) in enumerate(crumbs)]})
+    return ld_script(graph)
 
 def head(title, desc, extra='', canonical=None, robots=None):
     canon = (f'<link rel="canonical" href="{canonical}">\n<meta property="og:url" content="{canonical}">\n' if canonical else '')
@@ -128,6 +189,7 @@ def head(title, desc, extra='', canonical=None, robots=None):
   }})(document, navigator);
 </script>
 <link rel="stylesheet" href="css/styles.css?v={V}">
+<script src="js/app.js?v={V}" defer fetchpriority="high"></script>
 {extra}</head>
 '''
 
@@ -138,7 +200,7 @@ def header(cur):
         return ' aria-current="page"' if cur == k else ''
     mega_list = ''.join(
         f'<li><a href="{s["file"]}">{s["title"]}<svg class="i"><use href="#i-chevr"/></svg></a></li>'
-        for s in SERVICES)
+        for s in SERVICES) + f'<li class="mega-all"><a href="services.html">See all services {ARROW}</a></li>'
     mega_detail = ''.join(
         f'<div class="mp"><h4>{s["title"]}</h4><p>{s["lead"]}</p><a href="{s["file"]}">Show more {ARROW}</a></div>'
         for s in SERVICES)
@@ -177,6 +239,7 @@ def header(cur):
           <a href="about.html#commitments">Our commitments</a>
           <a href="faq.html">FAQs</a>
           <a href="resources.html">Resources</a>
+          <a href="updates.html">Updates</a>
           <a href="index.html#approach">How we work</a>
           <a href="index.html#reviews">Testimonials</a>
         </div>
@@ -203,7 +266,7 @@ def footer():
       </div>
       <div>
         <h4>Explore</h4>
-        <ul><li><a href="services.html">Services</a></li><li><a href="packages.html">Packages</a></li><li><a href="about.html">About us</a></li><li><a href="faq.html">FAQs</a></li><li><a href="resources.html">Resources</a></li><li><a href="collab.html">Collab with us</a></li><li><a href="careers.html">Careers</a></li><li><a href="contact.html">Contact</a></li></ul>
+        <ul><li><a href="services.html">Services</a></li><li><a href="packages.html">Packages</a></li><li><a href="about.html">About us</a></li><li><a href="faq.html">FAQs</a></li><li><a href="resources.html">Resources</a></li><li><a href="updates.html">Updates</a></li><li><a href="collab.html">Collab with us</a></li><li><a href="careers.html">Careers</a></li><li><a href="contact.html">Contact</a></li></ul>
       </div>
       <div>
         <h4>Follow</h4>
@@ -225,7 +288,7 @@ def footer():
     <p class="ftr-mark" aria-hidden="true">AJ Associates</p>
     <div class="ftr-bot">
       <span>© <span id="yr">2026</span> AJ Associates. All rights reserved.</span>
-      <span class="ftr-legal"><a href="privacy.html">Privacy policy</a> · <a href="terms.html">Terms &amp; disclaimer</a> · <a href="privacy.html#grievances-and-complaints">Grievances</a></span>
+      <span class="ftr-legal"><a href="privacy.html">Privacy policy</a> · <a href="terms.html">Terms &amp; disclaimer</a> · <a href="accessibility.html">Accessibility</a> · <a href="privacy.html#grievances-and-complaints">Grievances</a></span>
       {firm_line}
       <span>Kochi, Kerala · Mon – Sat, 9 AM – 6 PM</span>
     </div>
@@ -235,14 +298,13 @@ def footer():
 
 <div class="chat" id="chat">
   <ul class="chat-menu" id="chat-menu" aria-label="Contact options">
-    <li><a href="{WA_HELLO}" target="_blank" rel="noopener"><span class="ic wa"><svg class="i"><use href="#i-wa"/></svg></span><span>WhatsApp<small>Chat with a partner</small></span></a></li>
+    <li><a href="{WA_HELLO}" target="_blank" rel="noopener"><span class="ic wa"><svg class="i"><use href="#i-wa"/></svg></span><span>WhatsApp<small>Chat with our team</small></span></a></li>
     <li><a href="{CHAT_MAIL}"><span class="ic mail"><svg class="i"><use href="#i-mail"/></svg></span><span>Email<small>{INFO}</small></span></a></li>
     <li><a href="tel:{PHONE_TEL}"><span class="ic call"><svg class="i"><use href="#i-phone"/></svg></span><span>Call<small>{PHONE_SHOW}</small></span></a></li>
   </ul>
   <button class="chat-btn" id="chat-btn" type="button" aria-expanded="false" aria-controls="chat-menu" aria-label="Chat with us"><svg class="i i-c"><use href="#i-chat"/></svg><svg class="i i-x"><use href="#i-x"/></svg></button>
 </div>
 
-<script src="js/app.js?v={V}" defer></script>
 </body>
 </html>
 '''
@@ -261,10 +323,33 @@ SPLASH_JS = '''<script>
 
 SPLASH = '''<div id="splash" aria-hidden="true"><div class="sp-in"><img class="sp-mark" src="assets/mark-light.webp" width="80" height="64" alt=""><p class="sp-word">AJ ASSOCIATES</p><span class="sp-line"></span><p class="sp-sub">Tax · Audit · Accounts</p></div></div>'''
 
+# ---- 15. shown only when scripts are switched off
+NOSCRIPT = ('<noscript><p class="noscript">Some parts of this site, such as the menu on phones, the booking calendar and the tax estimate, need JavaScript. '
+            'Please switch it on, or reach us by <a href="tel:+916282406091">phone</a>, <a href="mailto:' + INFO + '">email</a> or <a href="contact.html">the contact page</a>. '
+            'You can also go to <a href="services.html">Services</a>, <a href="packages.html">Packages</a> or <a href="faq.html">FAQs</a>.</p></noscript>')
+
+def clean_path(filename):
+    """The public address of a generated file: no .html, and service pages sit under /services/."""
+    if filename == 'index.html':
+        return '/'
+    n = filename[:-5]
+    return '/services/' + n[len('service-'):] if n.startswith('service-') else '/' + n
+
+
+def cleanurls(html):
+    """Point every internal link at the clean address (/about, /services/taxation, /faq#gst-registration)."""
+    known = {'/' + f: clean_path(f) for f in PAGES}
+    def fix(m):
+        path, tail = m.group(1), m.group(2) or ''
+        return f'href="{known[path]}{tail}"' if path in known else m.group(0)
+    return re.sub(r'href="(/[^"#?]*\.html)([#?][^"]*)?"', fix, html)
+
+
 def page(filename, cur, title, desc, body, extra_head=''):
-    canonical = SITE + '/' if filename == 'index.html' else SITE + '/' + filename
-    html = (head(title, desc, extra_head + SPLASH_JS, canonical) + '<body>\n' + SPLASH + '\n<a class="skip" href="#main">Skip to content</a>\n\n'
+    canonical = SITE + clean_path(filename)
+    html = (head(title, desc, extra_head + SPLASH_JS + page_ld(filename), canonical) + '<body>\n' + SPLASH + '\n' + NOSCRIPT + '\n<a class="skip" href="#main">Skip to content</a>\n\n'
             + SPRITE + '\n\n' + header(cur) + '\n<main id="main">\n\n' + body.strip() + '\n\n</main>\n\n' + footer())
+    html = cleanurls(absolutize(html))     # served at /services/taxation etc., so every link and file path must be root-absolute
     with open(os.path.join(ROOT, filename), 'w', encoding='utf-8') as f:
         f.write(html)
     print('  wrote', filename, f'({len(html)//1024} KB)')
@@ -349,8 +434,8 @@ def build_home():
     approach = opt_in(part('approach'), '<section class="approach on-dark" aria-labelledby="ap-h">', '<section class="approach on-dark" id="approach" aria-labelledby="ap-h">')
     body = '\n\n'.join([hero, part('band'), part('ask'), services, approach, part('reviews'), CTA])
     page('index.html', 'home', 'AJ Associates | Tax, Audit &amp; Management Consultancy in Kochi, Kerala',
-         'AJ Associates is a tax, audit and management consultancy in Kochi, Kerala — GST, Income Tax, accounting, company formation, bank loan proposals and corporate compliance, led by experienced partners.',
-         fix_links(body, 'index.html'), JSON_LD + '\n')
+         'AJ Associates is a tax, audit and management consultancy in Kochi, Kerala — GST, Income Tax, accounting, company formation, bank loan proposals and corporate compliance, led by our experienced team.',
+         fix_links(body, 'index.html'))
 
 SVC_ART = {
     'service-taxation.html': '<path d="M100 40h90l30 30v130H100zM190 40v30h30M120 104h80M120 128h80M120 152h50"/><g class="ac"><circle cx="238" cy="172" r="11"/><circle cx="272" cy="204" r="11"/><path d="M276 160l-46 54"/></g>',
@@ -409,7 +494,7 @@ def svc_index_section():
 
 
 def build_services_index():
-    body = page_hero(['<a href="index.html">Home</a>', 'Services'], 'Seven practices, <em>one desk.</em>',
+    body = page_hero(['<a href="index.html">Home</a>', 'Services'], 'All your needs, <em>one desk.</em>',
                      'Integrated management consultancy across accounting, tax, legal, audit and compliance — built to support your business at every stage, in Kerala and across India.',
                      f'<div class="cta-row"><a class="btn btn-brass" href="contact.html">Book a consultation {ARROW}</a><a class="btn btn-ghost" href="packages.html">Find your package</a></div>')
     body += '\n\n' + svc_index_section() + '\n\n' + part('industries') + '\n\n' + CTA
@@ -467,7 +552,7 @@ def build_about():
     team = opt_in(part('team'), '<section class="sec team" id="team">', '<section class="sec team fit-me" id="team">')
     body = h1ize(fix_links(team, 'about.html')) + '\n\n' + fix_links(part('principles'), 'about.html') + '\n\n' + ABOUT_IND + '\n\n' + CTA
     page('about.html', 'about', 'About Us | AJ Associates — leadership and commitments',
-         'Meet the partners behind AJ Associates and the three commitments we hold ourselves to: statutory precision, a dedicated advisory desk and proactive compliance.', body)
+         'Meet the team behind AJ Associates and the three commitments we hold ourselves to: statutory precision, a dedicated advisory desk and proactive compliance.', body)
 
 def build_collab():
     net = opt_in(part('network'), '<section class="network on-dark" id="partnership">', '<section class="network on-dark flat fit-me" id="partnership">')
@@ -491,10 +576,217 @@ def build_legal():
     crumbs = lambda t: ['<a href="index.html">Home</a>', t]
     page('privacy.html', 'legal', 'Privacy policy | AJ Associates',
          'How AJ Associates collects, uses and protects the personal information you share through this website.',
-         page_hero(crumbs('Privacy policy'), 'Privacy <em>policy.</em>', 'What we collect, why we collect it and the choices you have. Short and clear.') + '\n\n' + legal_body(part('privacy')))
+         page_hero(crumbs('Privacy policy'), 'Privacy <em>policy.</em>', 'How we collect, use and protect your personal information, and the rights available to you.') + '\n\n' + legal_body(part('privacy')))
     page('terms.html', 'legal', 'Terms and disclaimer | AJ Associates',
          'The terms for using the AJ Associates website, and an important disclaimer about the general information it contains.',
-         page_hero(crumbs('Terms &amp; disclaimer'), 'Terms &amp; <em>disclaimer.</em>', 'The ground rules for using this website, and what the information on it is, and is not.') + '\n\n' + legal_body(part('terms')))
+         page_hero(crumbs('Terms &amp; disclaimer'), 'Terms &amp; <em>disclaimer.</em>', 'The terms governing use of this website and the limits of the information it provides.') + '\n\n' + legal_body(part('terms')))
+
+def build_accessibility():
+    page('accessibility.html', 'legal', 'Accessibility statement | AJ Associates',
+         "AJ Associates' commitment to website accessibility, known limitations and how to request assistance.",
+         page_hero(['<a href="index.html">Home</a>', 'Accessibility'], 'Accessibility <em>statement.</em>', 'Our commitment to making this website accessible to all visitors.') + '\n\n' + legal_body(part('accessibility')))
+
+# Short dated notes. Newest first. Add a new entry at the top, then run build.py.
+IT_SRC = ('Income Tax Department e-filing portal', 'https://www.incometax.gov.in/iec/foportal/')
+MCA_SRC = ('Ministry of Corporate Affairs', 'https://www.mca.gov.in/')
+GST_SRC = ('GST Council', 'https://www.gstcouncil.gov.in/')
+UPDATES = [
+    {'date': '2026-09-29', 'tag': 'Income tax', 'src': IT_SRC,
+     'title': 'Audit cases: tax audit report now due 21 October, and the return 21 November',
+     'body': ['The CBDT has given more time to taxpayers whose accounts must be audited, for assessment year 2026-27. The tax audit report can now be filed by 21 October 2026 instead of 30 September. The income tax return for these cases is now due on 21 November 2026 instead of 31 October.',
+              'This covers companies, other taxpayers whose accounts require an audit, and working partners of audited firms. Returns for other taxpayers keep their usual dates.']},
+    {'date': '2026-10-02', 'tag': 'Income tax', 'src': IT_SRC,
+     'title': 'One payment module for the old and new Income-tax Acts, and TDS corrections reopen',
+     'body': ['The e-filing portal now has a single payment module for tax payable under the Income-tax Act, 1961 and the Income-tax Act, 2025. Correction statements for TDS and TCS returns can also be filed for tax year 2026-27.',
+              'If you have a TDS return with errors, correcting it early avoids mismatches in your Form 26AS and your deductees’ returns.']},
+    {'date': '2026-09-07', 'tag': 'GST', 'src': GST_SRC,
+     'title': 'GST Council meeting moved to 7 October 2026',
+     'body': ['The 57th GST Council meeting, planned for 12 September, has been rescheduled to 7 October 2026 in New Delhi, with the officers’ meeting on 5 and 6 October. Reports say the agenda includes simpler GST registration and more automated cancellation of registrations.',
+              'Nothing the Council recommends takes effect until it is notified, so please wait for the notification before changing anything. We will note any change that affects you.']},
+    {'date': '2026-08-31', 'tag': 'Companies', 'src': MCA_SRC,
+     'title': 'The company filing amnesty (CCFS-2026) closed on 15 September',
+     'body': ['The Companies Compliance Facilitation Scheme 2026 let companies regularise delayed annual filings, such as MGT-7 and AOC-4, with reduced additional fees. The Ministry extended its last date to 15 September 2026 by General Circular 04/2026.',
+              'The window has now closed. If your company has annual filings pending, please file them without further delay, because the usual additional fees apply to late filings. We can check what is outstanding.']},
+    {'date': '2026-08-16', 'tag': 'Income tax', 'src': IT_SRC,
+     'title': 'Disclosure scheme for small taxpayers with foreign assets, open until 31 December',
+     'body': ['The Foreign Assets of Small Taxpayers Disclosure Scheme, 2026 is a one-time chance to declare foreign assets or income that were not reported earlier. It opened on 16 August 2026, the declaration is made in Form 1 on the e-filing portal, and the last date is 31 December 2026.',
+              'It has two routes, depending on the value of the assets and how they were acquired, each with its own payment. Whether it suits you depends on your facts, so please speak to us before you file.']},
+    {'date': '2026-10-02', 'tag': 'Income tax',
+     'title': 'Advance tax: the next instalment is due on 15 December',
+     'body': ['If your tax for the year is expected to be more than ₹10,000 after TDS, you generally need to pay it in instalments during the year rather than all at the end. By 15 December, the total paid should come to 75% of your estimated tax for the year.',
+              'Paying short attracts interest, so it is worth making an estimate now, while there is still time to adjust. We can help you work it out.']},
+    {'date': '2026-10-02', 'tag': 'GST and TDS',
+     'title': 'The monthly dates to keep in your diary',
+     'body': ['For regular monthly GST filers, GSTR-1 is due on the 11th and GSTR-3B on the 20th of the following month. TDS deducted in a month is generally deposited by the 7th of the next month.',
+              'Dates differ for quarterly filers and for some categories, and they can be extended by notification, so please check the current position before you rely on them.']},
+    {'date': '2026-10-02', 'tag': 'GST',
+     'title': 'Match your purchases before you file GSTR-3B',
+     'body': ['Input tax credit can be claimed only on invoices that appear in your GSTR-2B. Before filing, compare it with your purchase records and follow up with suppliers whose invoices are missing.',
+              'A few minutes of checking each month avoids mismatches, notices and credit that has to be reversed later.']},
+    {'date': '2026-10-02', 'tag': 'Notices',
+     'title': 'Received a tax notice? Read it, note the date, and ask for help early',
+     'body': ['Every notice has a reply date, and the portal shows it. Do not ignore a notice, even one that looks routine, because unanswered notices can lead to orders being passed against you.',
+              'Send us a copy as soon as it arrives. We will explain what it asks for and the time you have to respond.']},
+]
+
+
+def src_line(u):
+    if not u.get('src'):
+        return ''
+    n, url = u['src']
+    return f'<p class="upd-src">Source: <a href="{url}" target="_blank" rel="noopener">{n}</a></p>'
+
+
+def build_updates():
+    def fmt(d):
+        y, m, dd = d.split('-')
+        return f'{dd}-{m}-{y}'
+    items = ''.join(
+        f'''<article class="upd-item rv">
+        <div class="upd-meta"><span class="upd-tag">{u['tag']}</span><time datetime="{u['date']}">{fmt(u['date'])}</time></div>
+        <div class="upd-main"><h2>{u['title']}</h2>{''.join('<p>' + t + '</p>' for t in u['body'])}{src_line(u)}</div>
+      </article>''' for u in UPDATES)
+    body = f'''<section class="sec after-slant" aria-label="Updates">
+  <div class="wrap upd-wrap">
+    <p class="upd-note">General information, drawn from official announcements and checked on 2 October 2026. It is not advice on your own circumstances. Please read our <a href="terms.html">Terms &amp; disclaimer</a>.</p>
+    {items}
+  </div>
+</section>'''
+    hero = page_hero(['<a href="index.html">Home</a>', 'Updates'], 'Short notes, <em>kept current.</em>',
+                     'Deadlines and changes worth knowing about, each one dated.')
+    cta = (CTA.replace('Let’s talk', 'Need a hand?')
+              .replace('Precision in every filing. <em>Confidence in every decision.</em>', 'We’ll take it <em>from here.</em>'))
+    page('updates.html', 'resources', 'Updates | AJ Associates — deadlines and changes worth knowing',
+         'Short, dated notes from AJ Associates on tax and GST deadlines and changes that matter to individuals and businesses in Kerala.',
+         hero + '\n\n' + body + '\n\n' + cta)
+
+
+# ---------------------------------------------------------------- downloadable checklists (PDF)
+import sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from checklists import GROUPS, ALL as CHECKLISTS
+
+
+def chk_pdf(c):
+    return f"AJ-Associates-{c['slug']}-checklist.pdf"
+
+
+def checklists_section():
+    """The "Gather these first" section, built from tools/checklists.py."""
+    jump = ' '.join(f'<a href="#chk-{g["id"]}">{g["title"]}</a>' for g in GROUPS)
+    groups = ''
+    for g in GROUPS:
+        cards = ''
+        for c in g['lists']:
+            lis = ''.join(f'<li><label><input type="checkbox"><span class="box" aria-hidden="true"></span><span class="lbl">{t}</span></label></li>' for t in c['items'])
+            note = f'\n        <p class="chk-note">{c["note"]}</p>' if c.get('note') else ''
+            cards += f'''
+      <article class="chk-card rv" id="{c['slug']}">
+        <span class="stamp">{c['tag']}</span>
+        <h4>{c['title']}</h4>{note}
+        <ul>{lis}</ul>
+        <p class="chk-prog" aria-live="polite"><span class="bar"><i></i></span><span class="cnt">0 of {len(c['items'])} ready</span></p>
+        <a class="tlink chk-dl" href="downloads/{chk_pdf(c)}" download>Download as PDF {ARROW}</a>
+      </article>'''
+        groups += f'''
+    <div class="chk-group" id="chk-{g['id']}">
+      <h3 class="chk-gh">{g['title']}</h3>
+      <div class="chk-grid">{cards}
+      </div>
+    </div>'''
+    return f'''<section class="sec res-chk" id="checklists" aria-labelledby="chk-h">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <p class="eyebrow">Checklists</p>
+      <h2 id="chk-h">Gather these <em>first.</em></h2>
+      <p>The documents we usually ask for, so you can get ready before the first call. We confirm the exact list for your case.</p>
+    </div>
+    <nav class="chk-jump" aria-label="Checklist groups"><div class="chk-jump-in">{jump}</div></nav>
+    <div class="chk-all">{groups}
+    </div>
+  </div>
+</section>'''
+
+
+def build_checklist_pdfs():
+    try:
+        from reportlab.lib.pagesizes import A4
+        from reportlab.pdfgen import canvas
+        from reportlab.lib.utils import simpleSplit
+    except ImportError:
+        print('  (reportlab not installed: checklist PDFs left as they are)')
+        return
+    mm = 2.835
+    out = os.path.join(ROOT, 'downloads')
+    os.makedirs(out, exist_ok=True)
+    keep = {chk_pdf(c) for c in CHECKLISTS}
+    for f in os.listdir(out):
+        if f.endswith('.pdf') and f not in keep:
+            os.remove(os.path.join(out, f))          # a checklist that no longer exists
+    clean = lambda t: html_lib.unescape(re.sub(r'<[^>]+>', '', t)).replace('\u2011', '-').replace('\u2019', "'").replace('\u2013', '-').replace('\u2014', '-')
+    W, H = A4
+    for c in CHECKLISTS:
+        title = clean(c['title'])
+        cv = canvas.Canvas(os.path.join(out, chk_pdf(c)), pagesize=A4)
+        cv.setTitle(title + ' - checklist | AJ Associates')
+        cv.setAuthor('AJ Associates')
+
+        def footer_():
+            cv.setStrokeColorRGB(.85, .82, .76)
+            cv.setLineWidth(.6)
+            cv.line(20 * mm, 34 * mm, W - 20 * mm, 34 * mm)
+            cv.setFillColorRGB(.25, .29, .36)
+            cv.setFont('Helvetica', 9)
+            cv.drawString(20 * mm, 28 * mm, f'{INFO}   |   {PHONE_SHOW}   |   ajassociatesonline.com')
+            cv.drawString(20 * mm, 22.5 * mm, 'General information only; not advice on your own circumstances. Prepared 2 October 2026.')
+
+        cv.setFillColorRGB(.051, .169, .322)
+        cv.rect(0, H - 34 * mm, W, 34 * mm, stroke=0, fill=1)
+        cv.setFillColorRGB(1, 1, 1)
+        cv.setFont('Helvetica-Bold', 17)
+        cv.drawString(20 * mm, H - 17 * mm, 'AJ ASSOCIATES')
+        cv.setFont('Helvetica', 9)
+        cv.drawString(20 * mm, H - 24 * mm, 'Tax & Management Consultancy, Kochi, Kerala')
+        y = H - 54 * mm
+        cv.setFillColorRGB(.706, .533, .29)
+        cv.setFont('Helvetica-Bold', 9)
+        cv.drawString(20 * mm, y, 'DOCUMENT CHECKLIST')
+        y -= 9 * mm
+        cv.setFillColorRGB(.043, .082, .149)
+        cv.setFont('Helvetica-Bold', 20)
+        for ln in simpleSplit(title, 'Helvetica-Bold', 20, W - 40 * mm):
+            cv.drawString(20 * mm, y, ln)
+            y -= 8.5 * mm
+        y -= 4 * mm
+        cv.setFont('Helvetica', 10.5)
+        cv.setFillColorRGB(.25, .29, .36)
+        intro = 'The documents we usually ask for. Tick each one as you gather it. We confirm the exact list for your case.'
+        if c.get('note'):
+            intro = clean(c['note']) + ' ' + intro
+        for ln in simpleSplit(intro, 'Helvetica', 10.5, W - 40 * mm):
+            cv.drawString(20 * mm, y, ln)
+            y -= 5.4 * mm
+        y -= 6 * mm
+        for it in c['items']:
+            lines = simpleSplit(clean(it), 'Helvetica', 12, W - 52 * mm)
+            if y - len(lines) * 5.8 * mm < 40 * mm:       # not enough room: footer, then a fresh page
+                footer_()
+                cv.showPage()
+                y = H - 25 * mm
+            cv.setStrokeColorRGB(.051, .169, .322)
+            cv.setLineWidth(1.2)
+            cv.rect(20 * mm, y - 1.2 * mm, 4.6 * mm, 4.6 * mm, stroke=1, fill=0)
+            cv.setFillColorRGB(.043, .082, .149)
+            cv.setFont('Helvetica', 12)
+            for ln in lines:
+                cv.drawString(29 * mm, y, ln)
+                y -= 5.8 * mm
+            y -= 3.6 * mm
+        footer_()
+        cv.showPage()
+        cv.save()
+        print('  wrote downloads/' + chk_pdf(c))
+
 
 def build_careers():
     hero = page_hero(['<a href="index.html">Home</a>', 'Careers'], 'Build your practice <em>with us.</em>',
@@ -547,7 +839,7 @@ def build_resources():
               .replace('Precision in every filing. <em>Confidence in every decision.</em>', 'We’ll take it <em>from here.</em>'))
     page('resources.html', 'resources', 'Resources | AJ Associates — deadlines, checklists and tax notes',
          'A live deadline calendar, document checklists and short, clearly explained notes on income tax, GST and compliance from AJ Associates, Kochi.',
-         hero + '\n\n' + part('resources') + '\n\n' + cta)
+         hero + '\n\n' + part('resources').replace('<!--CHECKLISTS-->', checklists_section()) + '\n\n' + cta)
 
 def build_contact():
     body = h1ize(fix_links(opt_in(part('contact'), '<section class="sec contact" id="contact">', '<section class="sec contact fit-me" id="contact">'), 'contact.html'))
@@ -564,7 +856,7 @@ def absolutize(html):
 def special_page(filename, title, desc, body):
     html = (head(title, desc, '', None, 'noindex, nofollow') + '<body>\n\n' + SPRITE + '\n\n' + header(None)
             + '\n<main id="main">\n\n' + body.strip() + '\n\n</main>\n\n' + footer())
-    html = absolutize(html)
+    html = cleanurls(absolutize(html))
     with open(os.path.join(ROOT, filename), 'w', encoding='utf-8') as f:
         f.write(html)
     print('  wrote', filename, f'({len(html)//1024} KB)')
@@ -599,7 +891,7 @@ def build_error_pages():
     special_page('404.html', 'Page not found | AJ Associates', 'The page you were looking for could not be found.', nf)
     special_page('error.html', 'Something went wrong | AJ Associates', 'Something went wrong while loading this page. Please try again.', er)
 
-PAGES = ['index.html', 'services.html'] + [s['file'] for s in SERVICES] + ['packages.html', 'about.html', 'collab.html', 'careers.html', 'contact.html', 'faq.html', 'resources.html', 'privacy.html', 'terms.html']
+PAGES = ['index.html', 'services.html'] + [s['file'] for s in SERVICES] + ['packages.html', 'about.html', 'collab.html', 'careers.html', 'contact.html', 'faq.html', 'resources.html', 'updates.html', 'privacy.html', 'terms.html', 'accessibility.html']
 
 def write_deploy_files():
     def w(name, text):
@@ -621,11 +913,14 @@ def write_deploy_files():
       '  "start_url": "/",\n  "display": "browser",\n  "theme_color": "#f6f2ea",\n  "background_color": "#f6f2ea",\n'
       '  "icons": [\n    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},\n'
       '    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}\n  ]\n}\n')
-    urls = ''.join(f'  <url><loc>{SITE}/{"" if p == "index.html" else p}</loc></url>\n' for p in PAGES)
+    urls = ''.join(f'  <url><loc>{SITE}{clean_path(p)}</loc></url>\n' for p in PAGES)
     w('sitemap.xml', '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + urls + '</urlset>\n')
     w('robots.txt', f'User-agent: *\nAllow: /\nDisallow: /tools/\n\nSitemap: {SITE}/sitemap.xml\n')
-    clean = ''.join(f'/{p[:-5]:<32} /{p:<40} 200\n' for p in PAGES if p != 'index.html')
-    slash = ''.join(f'/{p[:-5]}/ /{p[:-5]} 301!\n' for p in PAGES if p != 'index.html')
+    clean = ''.join(f'{clean_path(p):<40} /{p:<40} 200\n' for p in PAGES if p != 'index.html')
+    slash = ''.join(f'{clean_path(p)}/ {clean_path(p)} 301!\n' for p in PAGES if p != 'index.html')
+    # the old .html addresses and the old flat service addresses all lead to the clean ones
+    slash += ''.join(f'/{p} {clean_path(p)} 301!\n' for p in PAGES if p != 'index.html')
+    slash += ''.join(f'/{p[:-5]} {clean_path(p)} 301!\n' for p in PAGES if p.startswith('service-'))
     w('_redirects', f"""# ---- One address only: ajassociatesonline.com --------------------------------------------
 # (Also set ajassociatesonline.com as the PRIMARY domain in Netlify > Domain management, so the
 #  free *.netlify.app address redirects here too.)
@@ -693,6 +988,6 @@ http://ajassociatesonline.com/*       {SITE}/:splat   301!
 if __name__ == '__main__':
     print('Building AJ Associates site...')
     build_home(); build_services_index(); build_service_pages(); build_packages()
-    build_about(); build_collab(); build_careers(); build_contact(); build_legal(); build_faq(); build_resources()
+    build_about(); build_collab(); build_careers(); build_contact(); build_legal(); build_accessibility(); build_faq(); build_resources(); build_updates(); build_checklist_pdfs()
     build_error_pages(); write_deploy_files()
     print('Done.')

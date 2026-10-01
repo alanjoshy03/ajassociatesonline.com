@@ -15,7 +15,7 @@ because the next rebuild overwrites them. Instead you edit the source files and 
 - **Colours, fonts and layout:** `css/styles.css`
 - **Interactive parts** (tax estimate, structure guide, package finder, deadline calendar, forms, dropdowns): `js/app.js`
 
-## The three steps for any change
+## The four steps for any change
 
 1. **Edit** the right source file (see the table below).
 2. **Rebuild.** Open a terminal in the project folder and run:
@@ -25,7 +25,10 @@ because the next rebuild overwrites them. Instead you edit the source files and 
    ```
 
    You need Python 3 installed. The script rewrites all the pages in a couple of seconds and prints "Done."
-3. **Upload** to GitHub. Netlify publishes it automatically a minute or so later.
+3. **Check it on your computer.** Double-click `tools/PREVIEW.bat` (or run `python tools/preview.py`) and the site opens at
+   http://localhost:8123 with the same addresses as the live site. Do not open `index.html` directly from the folder: the pages
+   use root-absolute links, so they only display properly through the preview.
+4. **Upload** to GitHub. Netlify publishes it automatically a minute or so later.
 
 If you changed `css/styles.css` or `js/app.js`, first raise the number `V` near the top of `tools/build.py`
 (for example from `'88'` to `'89'`) before step 2. That makes visitors' browsers download the new files
