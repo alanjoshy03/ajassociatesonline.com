@@ -463,14 +463,15 @@ blockquote { font: italic 500 clamp(1.25rem, 2.4vw, 1.65rem)/1.35 var(--serif); 
 
 /* home: breathing room above the slanted stats band */
 
-/* phones: the first screen is only the hero text + buttons; the monthly-rhythm card starts below the fold */
+/* phones: the first screen is the hero text + buttons, with the top edge of the monthly-rhythm card showing underneath */
 @media (max-width: 899px) {
   .hero { padding: 0 0 calc(var(--cut) + 2.4rem); }
   .hero-grid { gap: 2.2rem; }
-  .hero-grid > div:first-child { min-height: calc(100svh - var(--hdr)); display: flex; flex-direction: column; justify-content: center; padding: 1.5rem 0; }
+  .hero-grid > div:first-child { min-height: calc(100svh - var(--hdr) - 9rem); display: flex; flex-direction: column; justify-content: center; padding: 1.5rem 0; }
   .hero h1 { margin: 1.2rem 0 1.2rem; }
   .hero .lead { font-size: 1.02rem; line-height: 1.65; margin-bottom: 1.8rem; }
   .hero .cta-row { gap: .7rem; }
+  .hero .ledger.rv { opacity: 1; transform: none; }   /* the top of this card shows under the buttons, so it is clear there is more to scroll */
 }
 #ask { padding-top: calc(var(--cut) + 7rem); }
 
@@ -566,7 +567,7 @@ h1.h2 { letter-spacing: -.02em; }
 @media (min-width: 900px) { .svc-page-grid { grid-template-columns: 8fr 4fr; gap: 6rem; align-items: start; } .svc-other { position: sticky; top: calc(var(--hdr) + 2rem); } }
 
 /* accordion panel actions (home) */
-.acc .pn .pn-actions { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.8rem; }
+.acc .pn .pn-actions { display: flex; flex-wrap: wrap; gap: 1.1rem .7rem; margin-top: 1.8rem; }
 .acc .pn .pn-actions .btn { margin-top: 0; }
 
 /* ---------- call-to-action band ---------- */
@@ -813,7 +814,7 @@ h1.h2 { letter-spacing: -.02em; }
 .sq-act { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.3rem; }
 .sq-fine { margin-top: 1.2rem; font-size: .78rem; color: var(--muted); line-height: 1.5; }
 .svc-extra { display: inline-flex; margin-top: 1.4rem; }
-.sx-extra { display: inline-flex; margin-left: 1rem; }
+.sx-extra { display: flex; width: fit-content; margin: 1.2rem 0 0; }
 @media (min-width: 900px) { .sq-grid { grid-template-columns: 1fr 1fr; gap: 5rem; } .sq { padding: 2.2rem 2.2rem 2rem; } }
 
 /* FAQs */

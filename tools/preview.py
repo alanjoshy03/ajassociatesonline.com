@@ -8,7 +8,7 @@ import http.server, os, sys, webbrowser
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.chdir(ROOT)
-PORT = 8123
+PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 8123
 rules = []
 for ln in open('_redirects', encoding='utf-8'):
     p = ln.split('#')[0].split()
@@ -30,6 +30,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 if code == '200':
                     self.path = dst + q
                     break
+        if not os.path.exists(path.lstrip('/')) and os.path.exists(path.lstrip('/') + '.html'):   # like Netlify: /about serves about.html
+            self.path = path + '.html' + q
         return super().do_GET()
 
     def send_error(self, code, message=None, explain=None):
@@ -49,7 +51,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
 
 print(f'AJ Associates preview running at http://localhost:{PORT}  (Ctrl+C to stop)')
-webbrowser.open(f'http://localhost:{PORT}')
+if len(sys.argv) < 2:
+    webbrowser.open(f'http://localhost:{PORT}')
 try:
     http.server.ThreadingHTTPServer(('', PORT), Handler).serve_forever()
 except KeyboardInterrupt:

@@ -12,7 +12,7 @@ import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PART = os.path.join(ROOT, 'tools', 'partials')
-V = '147'   # bump to force browsers to re-download css/js after a change
+V = '151'   # bump to force browsers to re-download css/js after a change
 
 def part(name):
     with open(os.path.join(PART, name + '.html'), encoding='utf-8') as f:
@@ -357,14 +357,21 @@ def fix_heading_levels(html):
     return re.sub(r'<h([1-6])([^>]*)>', f, html)
 
 
+def out_file(filename):
+    """Where a page is written. Service pages live in services/, so /services/taxation is a real file and needs no redirect rule."""
+    return 'services/' + filename[len('service-'):] if filename.startswith('service-') else filename
+
+
 def page(filename, cur, title, desc, body, extra_head=''):
     canonical = SITE + clean_path(filename)
     html = (head(title, desc, extra_head + SPLASH_JS + page_ld(filename), canonical) + '<body>\n' + SPLASH + '\n' + NOSCRIPT + '\n<a class="skip" href="#main">Skip to content</a>\n\n'
             + SPRITE + '\n\n' + header(cur) + '\n<main id="main">\n\n' + body.strip() + '\n\n</main>\n\n' + footer())
     html = fix_heading_levels(cleanurls(absolutize(html)))     # served at /services/taxation etc., so every link and file path must be root-absolute
-    with open(os.path.join(ROOT, filename), 'w', encoding='utf-8') as f:
+    dest = os.path.join(ROOT, out_file(filename))
+    os.makedirs(os.path.dirname(dest), exist_ok=True)
+    with open(dest, 'w', encoding='utf-8') as f:
         f.write(html)
-    print('  wrote', filename, f'({len(html)//1024} KB)')
+    print('  wrote', out_file(filename), f'({len(html)//1024} KB)')
 
 # ----------------------------------------------------------------------------- helpers
 ANCHORS = {'#contact': 'contact.html', '#packages': 'packages.html', '#services': 'services.html',
@@ -914,7 +921,7 @@ def write_deploy_files():
     # every inline <script> on the site is allowed by its hash, so the policy can stay strict
     import hashlib, base64, glob
     hashes = set()
-    for fn in glob.glob(os.path.join(ROOT, '*.html')):
+    for fn in glob.glob(os.path.join(ROOT, '*.html')) + glob.glob(os.path.join(ROOT, 'services', '*.html')):
         for code in re.findall(r'<script>(.*?)</script>', open(fn, encoding='utf-8').read(), flags=re.S):
             hashes.add("'sha256-" + base64.b64encode(hashlib.sha256(code.encode('utf-8')).digest()).decode() + "'")
     csp = ("default-src 'self'; script-src 'self' " + ' '.join(sorted(hashes)) + "; style-src 'self' 'unsafe-inline'; "
@@ -928,11 +935,11 @@ def write_deploy_files():
     urls = ''.join(f'  <url><loc>{SITE}{clean_path(p)}</loc></url>\n' for p in PAGES)
     w('sitemap.xml', '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + urls + '</urlset>\n')
     w('robots.txt', f'User-agent: *\nAllow: /\nDisallow: /tools/\n\nSitemap: {SITE}/sitemap.xml\n')
-    clean = ''.join(f'{clean_path(p):<40} /{p:<40} 200\n' for p in PAGES if p != 'index.html')
+    clean = ''.join(f'{clean_path(p):<40} /{p:<40} 200\n' for p in PAGES if p != 'index.html' and not p.startswith('service-'))
     slash = ''.join(f'{clean_path(p)}/ {clean_path(p)} 301!\n' for p in PAGES if p != 'index.html')
     # the old .html addresses and the old flat service addresses all lead to the clean ones
     slash += ''.join(f'/{p} {clean_path(p)} 301!\n' for p in PAGES if p != 'index.html')
-    slash += ''.join(f'/{p[:-5]} {clean_path(p)} 301!\n' for p in PAGES if p.startswith('service-'))
+    slash += ''.join(f'/{p[:-5]} {clean_path(p)} 301!\n{clean_path(p)}.html {clean_path(p)} 301!\n' for p in PAGES if p.startswith('service-'))
     w('_redirects', f"""# ---- One address only: ajassociatesonline.com --------------------------------------------
 # (Also set ajassociatesonline.com as the PRIMARY domain in Netlify > Domain management, so the
 #  free *.netlify.app address redirects here too.)
