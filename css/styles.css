@@ -467,7 +467,7 @@ blockquote { font: italic 500 clamp(1.25rem, 2.4vw, 1.65rem)/1.35 var(--serif); 
 @media (max-width: 899px) {
   .hero { padding: 0 0 calc(var(--cut) + 2.4rem); }
   .hero-grid { gap: 2.2rem; }
-  .hero-grid > div:first-child { min-height: calc(100svh - var(--hdr) - 9rem); display: flex; flex-direction: column; justify-content: center; padding: 1.5rem 0; }
+  .hero-grid > div:first-child { min-height: calc(100svh - var(--hdr) - 5.2rem); display: flex; flex-direction: column; justify-content: center; padding: 1.5rem 0; }
   .hero h1 { margin: 1.2rem 0 1.2rem; }
   .hero .lead { font-size: 1.02rem; line-height: 1.65; margin-bottom: 1.8rem; }
   .hero .cta-row { gap: .7rem; }
