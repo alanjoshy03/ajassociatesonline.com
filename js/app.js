@@ -138,7 +138,7 @@
     var rg = $('#est-rg');
     if (rg) {
       var inr = function (n) { return '\u20b9' + Math.round(n).toLocaleString('en-IN'); };
-      var tax = function (t) {           // new regime, FY 2025-26: 12L rebate with marginal relief, 4% cess
+      var tax = function (t) {           // new regime, tax year 2026-27 (rates unchanged from 2025-26 after Budget 2026): 12L rebate with marginal relief, 4% cess
         var left = t, r = 0, i, x;
         for (i = 0; i < 6 && left > 0; i++) { x = Math.min(left, 400000); r += x * i * 0.05; left -= x; }
         if (left > 0) r += left * 0.3;
@@ -361,7 +361,6 @@
     var chkCards = $$('.chk-card', chkAll), chkTotal = chkCards.length;
     var chkBtn = document.createElement('button');
     chkBtn.type = 'button'; chkBtn.className = 'chk-seeall'; chkBtn.setAttribute('aria-expanded', 'false'); chkBtn.setAttribute('aria-controls', 'chk-all');
-    var chkFabUpdate = null;
     var chkResetGroups = null;
     var chkWide = function () { return window.matchMedia('(min-width:900px)').matches; };
     var chkFit = function () {
@@ -372,7 +371,6 @@
     var chkSet = function (open) {
       chkAll.classList.toggle('open', open);
       chkWrap.classList.toggle('open', open);
-      if (chkFabUpdate) chkFabUpdate();
       chkBtn.setAttribute('aria-expanded', open);
       chkBtn.textContent = open ? 'Show fewer' : 'See all Checklists';
       $$('.chk-gh', chkAll).forEach(function (h) { if (open) h.removeAttribute('inert'); else h.setAttribute('inert', ''); });
@@ -419,35 +417,6 @@
       var t = a.getAttribute('href').length > 1 && document.getElementById(a.getAttribute('href').slice(1));
       if (t && chkAll.contains(t)) { if (!chkAll.classList.contains('open')) chkSet(true); var gg = t.closest('.chk-group'); if (gg) setGroup(gg, true); }
     });
-    /* a floating "Jump to" button while you are down in the cards: one observer, no scroll handler */
-    var jumpRow = $('.chk-jump-in');
-    if (jumpRow && window.IntersectionObserver) {
-      var fab = document.createElement('div');
-      fab.className = 'chk-fab'; fab.setAttribute('aria-label', 'Jump to a checklist group');
-      var rowLinks = $$('a', jumpRow);
-      fab.innerHTML = '<button type="button" class="chk-fab-btn" aria-expanded="false" aria-controls="chk-fab-menu"><span class="cur">' + rowLinks[0].textContent + '</span></button>' +
-        '<ul class="chk-fab-menu" id="chk-fab-menu" hidden>' + rowLinks.map(function (a) { return '<li><a href="' + a.getAttribute('href') + '">' + a.textContent + '</a></li>'; }).join('') + '</ul>';
-      document.body.appendChild(fab);
-      var fBtn = $('.chk-fab-btn', fab), fMenu = $('.chk-fab-menu', fab), fCur = $('.cur', fBtn), fLinks = $$('a', fMenu);
-      var fOpen = function (o) { fMenu.hidden = !o; fBtn.setAttribute('aria-expanded', o); };
-      fBtn.addEventListener('click', function () { fOpen(fMenu.hidden); });
-      fMenu.addEventListener('click', function (e) { if (e.target.closest('a')) fOpen(false); });
-      document.addEventListener('click', function (e) { if (!fMenu.hidden && !fab.contains(e.target)) fOpen(false); });
-      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !fMenu.hidden) { fOpen(false); fBtn.focus(); } });
-      var seen = {}, vis = { wrap: false, row: true };
-      var show = function () { var on = vis.wrap && !vis.row && chkAll.classList.contains('open'); fab.classList.toggle('on', on); if (!on) fOpen(false); };
-      chkFabUpdate = show;
-      new IntersectionObserver(function (es) { vis.wrap = es[es.length - 1].isIntersecting; show(); }).observe(chkWrap);
-      new IntersectionObserver(function (es) { vis.row = es[es.length - 1].isIntersecting; show(); }).observe(jumpRow);
-      var io = new IntersectionObserver(function (es) {
-        es.forEach(function (e) { seen[e.target.id] = e.isIntersecting; });
-        var cur = null;
-        $$('.chk-group', chkAll).forEach(function (g) { if (!cur && seen[g.id]) cur = g.id; });
-        if (!cur) return;
-        fLinks.forEach(function (l) { var on = l.getAttribute('href') === '#' + cur; if (on) { l.setAttribute('aria-current', 'true'); fCur.textContent = l.textContent; } else l.removeAttribute('aria-current'); });
-      }, { rootMargin: '-30% 0px -55% 0px' });
-      $$('.chk-group', chkAll).forEach(function (g) { io.observe(g); });
-    }
     var chkRt; window.addEventListener('resize', function () { clearTimeout(chkRt); chkRt = setTimeout(chkFit, 150); });
     if (window.ResizeObserver) new ResizeObserver(function () { if (!chkAll.classList.contains('open')) chkFit(); }).observe(chkCards[0]);
   }

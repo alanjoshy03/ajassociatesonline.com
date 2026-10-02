@@ -12,7 +12,7 @@ import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PART = os.path.join(ROOT, 'tools', 'partials')
-V = '170'   # bump to force browsers to re-download css/js after a change
+V = '172'   # bump to force browsers to re-download css/js after a change
 
 def part(name):
     with open(os.path.join(PART, name + '.html'), encoding='utf-8') as f:
