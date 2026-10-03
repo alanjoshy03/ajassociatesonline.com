@@ -1,0 +1,86 @@
+<section class="sec contact" id="contact">
+  <div class="wrap">
+    <div class="contact-head">
+      <div class="sec-head rv">
+        <p class="eyebrow">Contact</p>
+        <h2>Let’s talk about <em>your business.</em></h2>
+        <p>Not sure what you need? That’s normal. Send a few details about your business and we’ll explain what you actually need, or visit our office in Kochi.</p>
+      </div>
+      <figure class="art art-talk rv"><img src="assets/art-talk.webp" width="748" height="564" loading="lazy" decoding="async" alt="An advisor on a call at her desk, with a tablet, rupee coins, an idea bulb and a briefcase around her"></figure>
+    </div>
+    <div class="contact-grid">
+      <div class="f-wrap rv">
+        <div class="f-tabs" role="group" aria-label="How would you like to reach us?"><button type="button" aria-pressed="true" data-pane="enquire">Send an enquiry</button><button type="button" aria-pressed="false" data-pane="book">Book an appointment</button></div>
+        <div class="f-pane" id="pane-enquire">
+        <h3>Send an enquiry</h3>
+        <p>We usually respond within one working day.</p>
+        <form class="f" id="cform" name="contact" method="POST" action="/contact?sent=1" data-netlify="true" netlify-honeypot="website" novalidate>
+          <input type="hidden" name="form-name" value="contact">
+          <input type="hidden" name="source" value=""><input type="hidden" name="referrer" value=""><input type="hidden" name="campaign" value="">
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div><label for="c-name">Full name *</label><input id="c-name" name="name" required autocomplete="name"></div>
+          <div class="f2">
+            <div><label for="c-tel">Mobile *</label><input id="c-tel" name="tel" type="tel" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" placeholder="10-digit number" required autocomplete="tel-national"></div>
+            <div><label for="c-mail">Email *</label><input id="c-mail" name="mail" type="email" required autocomplete="email"></div>
+          </div>
+          <div><label for="c-svc">Service required *</label>
+            <select id="c-svc" name="svc" required>
+              <option value="">Choose a category…</option>
+              <option>Accounts &amp; Audit</option>
+              <option>Tax, GST &amp; Compliance</option>
+              <option>Bank Loans &amp; Funding</option>
+              <option>Business Registration</option>
+              <option>Business Advice &amp; Restructuring</option>
+              <option>Accounting Staff &amp; Payroll</option>
+            </select></div>
+          <div class="f-wide"><label for="c-msg">Your requirements *</label><textarea id="c-msg" name="msg" required placeholder="Briefly describe what you need…"></textarea></div>
+          <label class="consent"><input type="checkbox" name="consent" value="yes" required><span class="cbx" aria-hidden="true"></span><span>I agree to the <a href="privacy.html">Privacy policy</a> and consent to AJ Associates using these details to respond to my request.</span></label>
+          <button class="btn btn-solid" type="submit">Send enquiry <svg class="i"><use href="#i-arrow"/></svg></button>
+          <p class="msg" role="status"></p>
+        </form>
+        </div>
+        <div class="f-pane" id="pane-book">
+        <h3>Book an appointment</h3>
+        <p>One-hour slots, Monday to Saturday. We are closed on public and regional holidays, and we confirm your slot by phone, email or WhatsApp.</p>
+        <p class="cl-next" id="cl-next" hidden></p>
+        <form class="f" id="bform" name="booking" method="POST" action="/contact?sent=book" data-netlify="true" netlify-honeypot="website" novalidate>
+          <input type="hidden" name="form-name" value="booking">
+          <input type="hidden" name="source" value=""><input type="hidden" name="referrer" value=""><input type="hidden" name="campaign" value="">
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div class="f2">
+            <div><label for="b-name">Full name *</label><input id="b-name" name="name" required autocomplete="name"></div>
+            <div><label for="b-tel">Mobile *</label><input id="b-tel" name="tel" type="tel" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" placeholder="10-digit number" required autocomplete="tel-national"></div>
+          </div>
+          <div class="f2">
+            <div><label for="b-mail">Email *</label><input id="b-mail" name="mail" type="email" required autocomplete="email"></div>
+            <div><label for="b-svc">Service *</label><select id="b-svc" name="svc" required><option value="">Choose a category…</option><option>Accounts &amp; Audit</option><option>Tax, GST &amp; Compliance</option><option>Bank Loans &amp; Funding</option><option>Business Registration</option><option>Business Advice &amp; Restructuring</option><option>Accounting Staff &amp; Payroll</option><option>Not sure yet</option></select></div>
+          </div>
+          <div class="f2">
+            <div><label for="b-date">Preferred date *</label><input id="b-date" name="date" type="date" required></div>
+            <div><label for="b-slot">Preferred time *</label><select id="b-slot" name="slot" required><option value="">Choose a slot…</option><option>9:00 – 10:00 AM</option><option>10:00 – 11:00 AM</option><option>11:00 AM – 12:00 PM</option><option>12:00 – 1:00 PM</option><option>1:00 – 2:00 PM</option><option>2:00 – 3:00 PM</option><option>3:00 – 4:00 PM</option><option>4:00 – 5:00 PM</option><option>5:00 – 6:00 PM</option></select></div>
+          </div>
+          <div><label for="b-mode">How would you like to meet? *</label><select id="b-mode" name="mode" required><option value="">Choose…</option><option>Visit our office in Kochi</option><option>Phone call</option><option>Video call</option></select></div>
+          <div><label for="b-note">Anything we should know? (optional)</label><textarea id="b-note" name="note" placeholder="A line or two is plenty."></textarea></div>
+          <label class="consent"><input type="checkbox" name="consent" value="yes" required><span class="cbx" aria-hidden="true"></span><span>I agree to the <a href="privacy.html">Privacy policy</a> and consent to AJ Associates using these details to respond to my request.</span></label>
+          <button class="btn btn-solid" type="submit">Request this slot <svg class="i"><use href="#i-arrow"/></svg></button>
+          <p class="msg" role="status"></p>
+        </form>
+        </div>
+      </div>
+
+      <div class="info rv">
+        <dl>
+          <div class="row"><svg class="i"><use href="#i-pin"/></svg><div><dt>Registered office</dt><dd>Second Floor, 10/1329 G, Bivera, Chullickal Road, Near St. Joseph’s Bethlehem Church, Chullickal, Kochi, Kerala – 682006</dd></div></div>
+          <div class="row"><svg class="i"><use href="#i-phone"/></svg><div><dt>Phone</dt><dd><a href="tel:+918136885152">+91 81368 85152</a></dd></div></div>
+          <div class="row"><svg class="i"><use href="#i-mail"/></svg><div><dt>Email</dt><dd><a href="mailto:info@ajassociatesonline.com">info@ajassociatesonline.com</a></dd></div></div>
+          <div class="row"><svg class="i"><use href="#i-clock"/></svg><div><dt>Office hours</dt><dd>Mon – Sat, 9:00 AM – 6:00 PM IST<small>Closed on Sundays and public holidays</small></dd></div></div>
+        </dl>
+        <div class="map">
+          <iframe title="AJ Associates office map" src="https://maps.google.com/maps?q=A+J+Associates,+10/1329+G,+Bivera,+Chullickal+Road,+Kochi,+Kerala&z=15&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <a class="tlink map-link" href="https://maps.app.goo.gl/AC9H632AbZB1FGa38" target="_blank" rel="noopener">Open in Google Maps <svg class="i"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+<!--HOLIDAYS-->

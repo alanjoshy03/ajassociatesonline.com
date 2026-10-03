@@ -1,0 +1,93 @@
+# one address only: ajassociatesonline.com
+# (also make it the primary domain in Netlify, so the netlify.app address redirects here too)
+http://www.ajassociatesonline.com/*   https://ajassociatesonline.com/:splat   301!
+https://www.ajassociatesonline.com/*  https://ajassociatesonline.com/:splat   301!
+http://ajassociatesonline.com/*       https://ajassociatesonline.com/:splat   301!
+
+# the accessibility page was folded into the terms
+/accessibility       /terms   301!
+/accessibility.html  /terms   301!
+/accessibility/      /terms   301!
+
+# home is just the domain, never /index.html
+/index.html   /   301!
+
+# drop the trailing slash (/about/ to /about) so css and images still load
+/services/ /services 301!
+/services/taxation/ /services/taxation 301!
+/services/company-formation/ /services/company-formation 301!
+/services/financial-management/ /services/financial-management 301!
+/services/corporate-secretarial/ /services/corporate-secretarial 301!
+/services/lending-capital/ /services/lending-capital 301!
+/services/business-strategy/ /services/business-strategy 301!
+/services/staffing-support/ /services/staffing-support 301!
+/packages/ /packages 301!
+/about/ /about 301!
+/collab/ /collab 301!
+/careers/ /careers 301!
+/contact/ /contact 301!
+/faq/ /faq 301!
+/resources/ /resources 301!
+/updates/ /updates 301!
+/starting-a-business/ /starting-a-business 301!
+/business-owners/ /business-owners 301!
+/privacy/ /privacy 301!
+/terms/ /terms 301!
+/services.html /services 301!
+/service-taxation.html /services/taxation 301!
+/service-company-formation.html /services/company-formation 301!
+/service-financial-management.html /services/financial-management 301!
+/service-corporate-secretarial.html /services/corporate-secretarial 301!
+/service-lending-capital.html /services/lending-capital 301!
+/service-business-strategy.html /services/business-strategy 301!
+/service-staffing-support.html /services/staffing-support 301!
+/packages.html /packages 301!
+/about.html /about 301!
+/collab.html /collab 301!
+/careers.html /careers 301!
+/contact.html /contact 301!
+/faq.html /faq 301!
+/resources.html /resources 301!
+/updates.html /updates 301!
+/starting-a-business.html /starting-a-business 301!
+/business-owners.html /business-owners 301!
+/privacy.html /privacy 301!
+/terms.html /terms 301!
+/service-taxation /services/taxation 301!
+/services/taxation.html /services/taxation 301!
+/service-company-formation /services/company-formation 301!
+/services/company-formation.html /services/company-formation 301!
+/service-financial-management /services/financial-management 301!
+/services/financial-management.html /services/financial-management 301!
+/service-corporate-secretarial /services/corporate-secretarial 301!
+/services/corporate-secretarial.html /services/corporate-secretarial 301!
+/service-lending-capital /services/lending-capital 301!
+/services/lending-capital.html /services/lending-capital 301!
+/service-business-strategy /services/business-strategy 301!
+/services/business-strategy.html /services/business-strategy 301!
+/service-staffing-support /services/staffing-support 301!
+/services/staffing-support.html /services/staffing-support 301!
+
+# clean addresses work when typed or shared, and the address bar stays as typed
+/services                                /services.html                            200
+/packages                                /packages.html                            200
+/about                                   /about.html                               200
+/collab                                  /collab.html                              200
+/careers                                 /careers.html                             200
+/contact                                 /contact.html                             200
+/faq                                     /faq.html                                 200
+/resources                               /resources.html                           200
+/updates                                 /updates.html                             200
+/starting-a-business                     /starting-a-business.html                 200
+/business-owners                         /business-owners.html                     200
+/privacy                                 /privacy.html                             200
+/terms                                   /terms.html                               200
+
+# keep source folders and config private
+/tools/*        /404.html   404!
+/_legacy/*      /404.html   404!
+/netlify.toml   /404.html   404!
+/.gitignore     /404.html   404!
+/_redirects     /404.html   404!
+
+# anything else that doesn't exist falls through to /404.html
