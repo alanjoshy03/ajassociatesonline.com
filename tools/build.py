@@ -12,7 +12,7 @@ import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PART = os.path.join(ROOT, 'tools', 'partials')
-V = '233'   # bump this whenever css/js changes so browsers fetch the new files
+V = '237'   # bump this whenever css/js changes so browsers fetch the new files
 
 def part(name):
     with open(os.path.join(PART, name + '.html'), encoding='utf-8') as f:
@@ -469,13 +469,11 @@ def opt_in(html, old_open, new_open):
     assert old_open in html, old_open
     return html.replace(old_open, new_open, 1)
 
-CTA_EYEBROW = 'Get in touch'
 CTA_HEAD = 'Tell us what you need, <em>and we’ll sort it out.</em>'
 
 CTA = f'''<section class="network on-dark cta-band" aria-labelledby="cta-h">
   <div class="wrap cta-in">
     <div class="rv">
-      <p class="eyebrow">{CTA_EYEBROW}</p>
       <h2 id="cta-h">{CTA_HEAD}</h2>
     </div>
     <div class="cta-row rv">
@@ -500,7 +498,6 @@ def page_hero(crumbs, title, lead, actions=''):
 IND_STRIP = f'''<div class="wrap ind-line" aria-labelledby="is-h">
     <div class="ind-line-in">
       <div class="rv">
-        <p class="eyebrow">Industries we serve</p>
         <h2 id="is-h">We work with <em>businesses of every kind.</em></h2>
       </div>
       <div class="rv">
@@ -738,8 +735,7 @@ def build_updates():
 </section>'''
     hero = page_hero(['<a href="index.html">Home</a>', 'Updates'], 'Short notes, <em>kept current.</em>',
                      'Deadlines and changes worth knowing about, each one dated.')
-    cta = (CTA.replace(CTA_EYEBROW, 'Need a hand?')
-              .replace(CTA_HEAD, 'We’ll take it <em>from here.</em>'))
+    cta = (CTA.replace(CTA_HEAD, 'We’ll take it <em>from here.</em>'))
     page('updates.html', 'resources', 'Updates | AJ Associates — deadlines and changes worth knowing',
          'Short, dated notes from AJ Associates on tax and GST deadlines and changes that matter to individuals and businesses in Kerala.',
          hero + '\n\n' + body + '\n\n' + cta)
@@ -871,8 +867,8 @@ def build_checklist_pdfs():
         cv.save()
         print('  wrote downloads/' + chk_pdf(c))
 
-def guide_cta(eyebrow, heading, wa_text, label):
-    return CTA.replace(CTA_EYEBROW, eyebrow).replace(CTA_HEAD, heading).replace(
+def guide_cta(heading, wa_text, label):
+    return CTA.replace(CTA_HEAD, heading).replace(
         'href="' + WA_HELLO + '"', 'href="https://wa.me/' + WA + '?text=' + wa_text + '"').replace('Chat on WhatsApp', label)
 
 
@@ -880,7 +876,7 @@ def build_starting():
     hero = page_hero(['<a href="index.html">Home</a>', 'Starting a business'], 'Starting a business? <em>Start it properly.</em>',
                      'You don’t need to know what GST, income tax or bookkeeping involve before you talk to us. Here is the path most new businesses follow, and where we help.',
                      f'<div class="cta-row"><a class="btn btn-brass" href="contact.html">Book an appointment {ARROW}</a><a class="btn btn-ghost" href="packages.html">Find your package</a></div>')
-    cta = guide_cta('Ready when you are', 'Set it up <em>properly from day one.</em>', 'Hello%2C%20I%20am%20starting%20a%20business%20and%20need%20guidance.', 'Ask on WhatsApp')
+    cta = guide_cta('Set it up <em>properly from day one.</em>', 'Hello%2C%20I%20am%20starting%20a%20business%20and%20need%20guidance.', 'Ask on WhatsApp')
     page('starting-a-business.html', 'starting', 'Starting a business in Kerala | AJ Associates, Kochi',
          'A plain-English path for new businesses in Kerala: structure, registration, bank account, GST, invoices and returns, with help at every step.',
          hero + '\n\n' + part('starting') + '\n\n' + cta)
@@ -890,7 +886,7 @@ def build_owners():
     hero = page_hero(['<a href="index.html">Home</a>', 'For business owners'], 'For business owners. <em>Support all year, not just filings.</em>',
                      'Accounting, tax and compliance handled through the year: books kept up to date, returns filed on time and notices dealt with when they come.',
                      f'<div class="cta-row"><a class="btn btn-brass" href="contact.html">Book an appointment {ARROW}</a><a class="btn btn-ghost" href="packages.html">Find your package</a></div>')
-    cta = guide_cta('Discuss your business', 'Let’s look at <em>your business together.</em>', 'Hello%2C%20I%20run%20a%20business%20and%20would%20like%20to%20discuss%20ongoing%20support.', 'Chat on WhatsApp')
+    cta = guide_cta('Let’s look at <em>your business together.</em>', 'Hello%2C%20I%20run%20a%20business%20and%20would%20like%20to%20discuss%20ongoing%20support.', 'Chat on WhatsApp')
     page('business-owners.html', 'owners', 'For business owners | AJ Associates, Kochi',
          'Ongoing accounting, GST, tax and compliance for established businesses in Kerala, whether or not you already have an accountant.',
          hero + '\n\n' + part('owners') + '\n\n' + cta)
@@ -934,8 +930,7 @@ def build_careers():
 def build_faq():
     hero = page_hero(['<a href="index.html">Home</a>', 'FAQs'], 'Questions, <em>answered.</em>',
                      'Straight answers to what clients ask us most about tax, GST, companies and accounts. Can’t find yours? We’ll answer it personally.')
-    cta = (CTA.replace(CTA_EYEBROW, 'Still have a question?')
-              .replace(CTA_HEAD, 'We’ll answer it <em>personally.</em>'))
+    cta = (CTA.replace(CTA_HEAD, 'We’ll answer it <em>personally.</em>'))
     page('faq.html', 'faq', 'FAQs | AJ Associates — tax, GST, company and accounts answers',
          'Answers to common questions about income tax returns, GST, notices, company formation, audit and working with AJ Associates in Kochi.',
          hero + '\n\n' + part('faq') + '\n\n' + cta)
@@ -943,8 +938,7 @@ def build_faq():
 def build_resources():
     hero = page_hero(['<a href="index.html">Home</a>', 'Resources'], 'Practical guides, <em>clearly explained.</em>',
                      'Deadlines, checklists and short notes on the questions we hear most. Free to use, and always dated.')
-    cta = (CTA.replace(CTA_EYEBROW, 'Need a hand?')
-              .replace(CTA_HEAD, 'We’ll take it <em>from here.</em>'))
+    cta = (CTA.replace(CTA_HEAD, 'We’ll take it <em>from here.</em>'))
     page('resources.html', 'resources', 'Resources | AJ Associates — deadlines, checklists and tax notes',
          'A live deadline calendar, document checklists and short, clearly explained notes on income tax, GST and compliance from AJ Associates, Kochi.',
          hero + '\n\n' + part('resources').replace('<!--CHECKLISTS-->', checklists_section()) + '\n\n' + cta)
