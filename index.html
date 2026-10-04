@@ -22,7 +22,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 
-<link rel="preload" href="/css/styles.css?v=237" as="style">
+<link rel="preload" href="/css/styles.css?v=285" as="style">
 <link rel="preload" href="/assets/fonts/playfair.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
 <script>
@@ -32,8 +32,8 @@
     if ((n.connection && n.connection.saveData) || (n.deviceMemory && n.deviceMemory <= 2) || (n.hardwareConcurrency && n.hardwareConcurrency <= 2)) c.add('lite');
   })(document, navigator);
 </script>
-<link rel="stylesheet" href="/css/styles.css?v=237">
-<script src="/js/app.js?v=237" defer fetchpriority="high"></script>
+<link rel="stylesheet" href="/css/styles.css?v=285">
+<script src="/js/app.js?v=285" defer fetchpriority="high"></script>
 <script>
   /* First page of a visit only, and never on low-end / save-data / reduced-motion devices. */
   (function (d, n, w) {
@@ -130,7 +130,7 @@
     <div>
       <p class="eyebrow">Tax · Audit · Accounts</p>
       <h1>Compliance done right. <em>Growth made clear.</em></h1>
-      <p class="lead">We handle accounting, tax, audit and company compliance for individuals and businesses, and we explain it in plain words.</p>
+      <p class="lead">We handle accounting, tax, audit and company compliance for individuals and businesses, and we explain everything as we go.</p>
       <div class="cta-row">
         <a class="btn btn-solid" href="/contact?from=home~hero">Book an appointment <svg class="i"><use href="#i-arrow"/></svg></a>
         <a class="btn btn-ghost" href="https://wa.me/916282406091?text=Greetings!%20I%20would%20like%20to%20connect%20with%20AJ%20Associates." target="_blank" rel="noopener"><svg class="i"><use href="#i-wa"/></svg> Chat on WhatsApp</a>
@@ -172,22 +172,22 @@
       <p>You don’t need to know which service you need. Tell us what you’re trying to do, and we’ll guide you.</p>
     </div>
     <ul class="route-list rv">
-      <li><a class="route-row" href="/starting-a-business"><span class="t">I’m starting a business</span><span class="d">Registration, GST, accounting and the basics, step by step.</span><svg class="i go" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
-      <li><a class="route-row" href="/business-owners"><span class="t">I already run a business</span><span class="d">Ongoing accounting, tax, compliance and support, whether or not you already have an accountant.</span><svg class="i go" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+      <li><a class="route-row" data-journey="Chose: starting a business" href="/starting-a-business"><span class="t">I’m starting a business</span><span class="d">Registration, GST, accounting and the basics, step by step.</span><svg class="i go" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+      <li><a class="route-row" data-journey="Chose: already run a business" href="/business-owners"><span class="t">I already run a business</span><span class="d">Ongoing accounting, tax, compliance and support, whether or not you already have an accountant.</span><svg class="i go" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
       <li>
         <details class="route-more">
           <summary class="route-row"><span class="t">I have a specific problem</span><span class="d">A tax notice, a filing, GST or accounts.</span><span class="pm" aria-hidden="true"></span></summary>
           <ul class="route-sub">
-            <li><a href="/faq#tax-notice">I received a tax notice</a></li>
-            <li><a href="/resources#income-tax-return">I need to file my income tax</a></li>
-            <li><a href="/faq#gst-registration">I have a GST question</a></li>
-            <li><a href="/services/financial-management">My accounts need attention</a></li>
-            <li><a href="/services/company-formation">I want to register something</a></li>
-            <li><a data-from="route-problem-other" href="/contact?from=home~route-problem-other">Something else</a></li>
+            <li><a data-journey="Specific problem: I received a tax notice" href="/faq#tax-notice">I received a tax notice</a></li>
+            <li><a data-journey="Specific problem: I need to file my income tax" href="/resources#income-tax-return">I need to file my income tax</a></li>
+            <li><a data-journey="Specific problem: I have a GST question" href="/faq#gst-registration">I have a GST question</a></li>
+            <li><a data-journey="Specific problem: My accounts need attention" href="/services/financial-management">My accounts need attention</a></li>
+            <li><a data-journey="Specific problem: I want to register something" href="/services/company-formation">I want to register something</a></li>
+            <li><a data-journey="Specific problem: Something else" data-from="route-problem-other" href="/contact?from=home~route-problem-other">Something else</a></li>
           </ul>
         </details>
       </li>
-      <li><a class="route-row" data-from="route-not-sure" href="/contact?from=home~route-not-sure"><span class="t">I’m not sure yet</span><span class="d">Tell us what’s going on, and we’ll help you work out what you need.</span><svg class="i go" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
+      <li><a class="route-row" data-from="route-not-sure" data-journey="Chose: not sure yet" href="/contact?from=home~route-not-sure"><span class="t">I’m not sure yet</span><span class="d">Tell us what’s going on, and we’ll help you work out what you need.</span><svg class="i go" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
     </ul>
   </div>
 </section>

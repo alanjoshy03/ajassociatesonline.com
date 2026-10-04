@@ -150,7 +150,7 @@ Open Chrome and go to **http://localhost:8123**. Look at the page you changed (a
 | About page: Jithu and Alan cards and the team quote | `tools/partials/team.html` |
 | About page: "Three things we hold ourselves to" and the opening line | `tools/partials/principles.html` |
 | Packages page and the finder's wording | `tools/partials/packages.html` and `tools/partials/packages_more.html` |
-| What each package includes, and the "who it's for" lines | `js/app.js` (search for `PK` and `WHO`) |
+| What each package includes, and the "who it's for" lines | `js/app.js` (search for `size changes what a business needs`) |
 | Starting a business page | `tools/partials/starting.html` |
 | For business owners page | `tools/partials/owners.html` |
 | Collaboration page and form | `tools/partials/network.html` |
@@ -255,7 +255,14 @@ Open `js/app.js` and search for `due dates, worked out`. You will see the list c
 
 ### 6.10 Change what a package includes
 
-Open `js/app.js`, search for `PK = {`. Each package has a name, a label ("For individuals") and a list of six items in quotes. Change the words inside the quotes, keep the commas and brackets. The "who it's for" sentence for each is in `WHO` just below. Raise `V`.
+Open `js/app.js` and search for `size changes what a business needs`. The Packages answer is built from two layers: a line for the business type and lines for the turnover size. The pieces are:
+
+- `NAME` and `WHO`: the plan's name and its "who it's for" sentence.
+- `LEAD`: the first of the three points on the card, one per business type.
+- `BIZ_PTS` and `IND_PTS`: the other two points, one pair for each of the four turnover stops (business, and individual).
+- `BASE`, `BIZ_DET` and `IND_DET`: the longer list behind "See everything included".
+
+Change only the words inside the quotes and keep the commas and brackets. Anything about tax limits (for example when an audit applies) should be checked against the official rules first, then raise `V`.
 
 ### 6.11 Add or change a document checklist
 
@@ -290,7 +297,8 @@ The seven services are all defined in `tools/partials/services.html`. Each is a 
 1. Prepare each picture as a **portrait, 4:5 shape** (for example 800 × 1000 pixels), a clean background and similar style for both.
 2. Convert to **WebP** (squoosh.app works in a browser; choose WebP, quality 80).
 3. Name them exactly `jithu-s.webp` and `alan-s.webp` and put them in the `assets/` folder, replacing the old ones.
-4. Raise `V`, build, preview, and check both cards on a phone and a laptop.
+4. Open `tools/partials/team.html`, find the picture's `src="assets/alan-s.webp?v=3"` (or `jithu-s.webp`) and raise the number after `?v=` by one. Browsers keep images for a week, so without this, returning visitors would still see the old photo.
+5. Raise `V`, build, preview, and check both cards on a phone and a laptop. Keep the width and height numbers in that same `<img>` tag matching the new picture's size.
 
 ### 6.14 Change testimonials or the rating
 
@@ -367,7 +375,7 @@ In practice that means: all `.html` files in the main folder, the `services/` fo
 
 ### 8.4 Where enquiries arrive
 
-In Netlify: the site, then **Forms**. You will see three forms: `contact`, `booking` and `collab`. Each submission also shows `source`, `referrer` and `campaign` fields that tell you which button the visitor came from. The firm should set an email notification: Forms, then **Form notifications**, then **Add notification**, then Email, so enquiries are emailed to the firm.
+In Netlify: the site, then **Forms**. You will see three forms: `contact`, `booking` and `collab`. Each submission also shows `source`, `referrer` and `campaign` fields that tell you which button the visitor came from, and a `journey` field that lists the pages they went through and the choices they made on the way (for example "Page: home > Chose: starting a business > Page: starting-a-business > Page: contact"). The firm should set an email notification: Forms, then **Form notifications**, then **Add notification**, then Email, so enquiries are emailed to the firm.
 
 Check the **Spam** tab occasionally, in case a genuine enquiry was caught.
 
@@ -500,6 +508,6 @@ When you ask for help, send:
 | Due dates | `CAL` in `js/app.js` |
 | Tax estimate | `new regime` in `js/app.js` |
 | Checklists | `tools/checklists.py` |
-| Package contents | `PK` in `js/app.js` |
+| Package contents | `BASE`, `BIZ_PTS` and the lists beside them in `js/app.js` |
 | Photos | `assets/` (WebP, 4:5 for the team cards) |
 | Colours | top of `css/styles.css` |

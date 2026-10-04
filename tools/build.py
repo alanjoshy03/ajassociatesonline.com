@@ -12,7 +12,7 @@ import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PART = os.path.join(ROOT, 'tools', 'partials')
-V = '237'   # bump this whenever css/js changes so browsers fetch the new files
+V = '285'   # bump this whenever css/js changes so browsers fetch the new files
 
 def part(name):
     with open(os.path.join(PART, name + '.html'), encoding='utf-8') as f:
@@ -623,7 +623,7 @@ def build_service_pages():
         page(s['file'], 'services', f'{s["title"]} | AJ Associates, Kochi', s['lead'].replace('&amp;', '&'), hero + '\n\n' + main + '\n\n' + (QUIZ + '\n\n' if s['file'] == 'service-company-formation.html' else '') + CTA)
 
 def build_packages():
-    body = h1ize(fix_links(opt_in(part('packages'), '<section class="sec" id="packages">', '<section class="sec fit-me" id="packages">'), 'packages.html'))
+    body = h1ize(fix_links(part('packages'), 'packages.html'))
     body += '\n\n' + part('packages_more')
     page('packages.html', 'packages', 'Packages | AJ Associates — find the right plan for your business',
          'Choose your business type and turnover to see the tax, accounts and compliance work we would usually recommend. We agree the final work and the fee with you.', body)
@@ -878,7 +878,7 @@ def build_starting():
                      f'<div class="cta-row"><a class="btn btn-brass" href="contact.html">Book an appointment {ARROW}</a><a class="btn btn-ghost" href="packages.html">Find your package</a></div>')
     cta = guide_cta('Set it up <em>properly from day one.</em>', 'Hello%2C%20I%20am%20starting%20a%20business%20and%20need%20guidance.', 'Ask on WhatsApp')
     page('starting-a-business.html', 'starting', 'Starting a business in Kerala | AJ Associates, Kochi',
-         'A plain-English path for new businesses in Kerala: structure, registration, bank account, GST, invoices and returns, with help at every step.',
+         'A step-by-step path for new businesses in Kerala: structure, registration, bank account, GST, invoices and returns, with help at every step.',
          hero + '\n\n' + part('starting') + '\n\n' + cta)
 
 

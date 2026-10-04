@@ -1,4 +1,4 @@
-/* AJ Associates site script. Plain JS, no libraries. The pages still work without it.
+/* AJ Associates site script. Vanilla JS, no libraries. The pages still work without it.
    Each block checks for its own elements first, so one file serves every page. */
 (function () {
   'use strict';
@@ -174,7 +174,7 @@
       r.addEventListener('mouseenter', function () { if (sxDesk.matches) sxOpen(i); });
       r.addEventListener('focus', function () { if (sxDesk.matches) sxOpen(i); });
       r.addEventListener('click', function (e) {
-        if (sxDesk.matches) return;                       // desktop: the row is a plain link
+        if (sxDesk.matches) return;                       // desktop: the row is an ordinary link
         e.preventDefault();
         sxToggle(i);
       });
@@ -425,8 +425,8 @@
   }
 
   /* ---- dropdowns: the real <select> stays for the form data and as a fallback, a styled list replaces the pop-up ---- */
-  $$('.f select').forEach(function (sel, n) {
-    var wrap = document.createElement('div'); wrap.className = 'cs cs-on';
+  $$('.f select, .pk-sel select').forEach(function (sel, n) {
+    var wrap = document.createElement(sel.closest('.pk-sel') ? 'span' : 'div'); wrap.className = 'cs cs-on';
     sel.parentNode.insertBefore(wrap, sel); wrap.appendChild(sel);
     sel.tabIndex = -1; sel.setAttribute('aria-hidden', 'true');
     var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'cs-btn';
@@ -574,29 +574,14 @@
   var form = $('#finder');
   if (form) {
     form.addEventListener('submit', function (e) { e.preventDefault(); });   // (an inline handler would be blocked by the csp)
-    var PK = {
-      individual: ['Tax filing for individuals and NRIs', 'For individuals', [
-        'Income Tax Return (ITR-1 / 2 / 3) e-filing', 'Form 26AS & AIS data reconciliation',
-        'Advance tax computation and quarterly estimates', 'Capital gains and investment exemption guidance',
-        'Foreign income and NRI remittance advisory', 'Bank interest and dividend income review']],
-      prop_s: ['Small business (proprietorship)', 'For small businesses', [
-        'Annual Income Tax Return (ITR-3/4 presumptive) filing', 'Financial statements (P&L and balance sheet)',
-        'Form 26AS / AIS reconciliation and TDS claiming', 'Advance tax computation and payment schedule advice',
-        'MSME / Udyam registration and compliance support', 'Bank statement reconciliation and ledger review']],
-      prop_g: ['Proprietorship with GST', 'For growing businesses', [
-        'Monthly GST returns (GSTR-1, GSTR-3B) and GSTR-2B matching', 'Income Tax and tax audit compliance (Sec 44AB)',
-        'Form 26AS / AIS reconciliation and ITC verification', 'Quarterly TDS computation, payment and e-filing',
-        'Advance tax computation and quarterly tax planning', 'Bookkeeping and ledger supervision']],
-      partnership: ['Partnership or LLP', 'For firms and LLPs', [
-        'LLP annual filings with the Registrar (Form 11 and Form 8)', 'Partner capital accounts and profit distribution',
-        'Monthly GST filings and GSTR-2B input credit matching', 'Quarterly TDS computation, payment and e-filing',
-        'Form 26AS / AIS reconciliation and advance tax advice', 'Tax audit, and representing you before the authorities']],
-      pvt_ltd: ['Private Limited company', 'For companies', [
-        'Annual filings with the Registrar (AOC-4, MGT-7)', 'Looking after the statutory audit, and board resolutions',
-        'Form 26AS / AIS and ITC reconciliation', 'Monthly GST (GSTR-1, 3B) and quarterly TDS (26Q)',
-        'Advance tax calculation and tax planning for the company', 'Director KYC and corporate secretarial upkeep']]
+    // size changes what a business needs, so the answer is built from two layers: a line for the business type, and lines for its size
+    var NAME = {
+      individual: 'Tax filing for individuals and NRIs',
+      prop_s: 'Small business (proprietorship)',
+      prop_g: 'Proprietorship with GST',
+      partnership: 'Partnership or LLP',
+      pvt_ltd: 'Private Limited company'
     };
-    var CHECK = '<svg class="i"><use href="#i-check"/></svg>';
     var WHO = {
       individual: 'For salaried people, professionals and NRIs who want their return and tax planning handled.',
       prop_s: 'For a small business or sole trader who needs the basics done properly.',
@@ -604,28 +589,84 @@
       partnership: 'For partnership firms and LLPs that file regularly and share profits between partners.',
       pvt_ltd: 'For companies that want their yearly filings, audit and compliance taken care of.'
     };
-    var renderFinder = function () {
-      var ent = form.elements.entity.value, to = form.elements.turnover.value;
-      var key = ent === 'proprietorship' ? (to === 'under_20l' ? 'prop_s' : 'prop_g') : ent;
-      var p = PK[key], tier = p[1], feats = p[2].slice();
-      if (ent !== 'individual' && (to === '1cr_5cr' || to === 'above_5cr')) {
-        tier = 'For larger businesses'; feats.push('Bank CMA data and loan syndication support');
-      }
-      $('#r-name').textContent = p[0];
-      $('#r-tier').textContent = tier;
-      $('#r-who').textContent = WHO[key];
-      var ul = $('#r-list'); ul.textContent = '';
-      feats.forEach(function (f) {
-        var li = document.createElement('li'); li.innerHTML = CHECK;
+    var LEAD = {
+      prop: 'Your yearly return filed on time',
+      partnership: 'Your firm\u2019s yearly filings done',
+      pvt_ltd: 'Your Registrar filings and audit looked after',
+      individual: 'Your income tax return filed correctly'
+    };
+    var BASE = {
+      prop: ['Annual Income Tax Return filing', 'Financial statements (P&L and balance sheet)', 'Form 26AS / AIS reconciliation and TDS claiming'],
+      partnership: ['LLP annual filings with the Registrar (Form 11 and Form 8)', 'Partner capital accounts and profit distribution', 'Form 26AS / AIS reconciliation and advance tax advice'],
+      pvt_ltd: ['Annual filings with the Registrar (AOC-4, MGT-7)', 'Looking after the statutory audit, and board resolutions', 'Director KYC and corporate secretarial upkeep'],
+      individual: ['Income Tax Return (ITR-1 / 2 / 3) e-filing', 'Form 26AS and AIS data reconciliation', 'Bank interest and dividend income review']
+    };
+    var BIZ_PTS = [
+      ['Your accounts and statements in order', 'Registrations and tax dates looked after'],
+      ['Your accounts and statements in order', 'GST registration and monthly returns', 'Books checked against your GST data'],
+      ['Your GST returns filed every month', 'Books checked against your GST data', 'Quarterly TDS returns filed', 'Tax audit and GST annual return handled'],
+      ['Your GST returns filed every month', 'Quarterly TDS returns filed', 'Tax audit and GST annual return handled', 'E-invoicing and GST reconciliation', 'Monthly reports and bank files ready']
+    ];
+    var BIZ_DET = [
+      ['Advance tax computation and payment schedule advice', 'MSME / Udyam registration and compliance support', 'Bank statement reconciliation and ledger review'],
+      ['GST registration and monthly returns (GSTR-1, GSTR-3B)', 'GSTR-2B matching and input credit verification', 'Advance tax computation and payment schedule advice', 'Bookkeeping and ledger supervision'],
+      ['Tax audit report where it is required', 'Monthly GST returns and the GST annual return', 'Quarterly TDS computation, payment and e-filing', 'Advance tax computation and quarterly tax planning', 'Bookkeeping and ledger supervision'],
+      ['E-invoicing support and GST reconciliation', 'Tax audit and GST audit coordination', 'Monthly management reports', 'Bank CMA data and loan syndication support', 'Quarterly TDS computation, payment and e-filing', 'Advance tax computation and quarterly tax planning']
+    ];
+    var IND_PTS = [
+      ['Your figures checked against Form 26AS and AIS', 'Advance tax worked out before it is due'],
+      ['Your figures checked against Form 26AS and AIS', 'Advance tax worked out before it is due', 'Capital gains and investments looked at'],
+      ['Advance tax worked out before it is due', 'Capital gains and investments looked at', 'Tax planning for a higher income', 'Foreign income and remittances advised on'],
+      ['Advance tax worked out before it is due', 'Tax planning for a higher income', 'Foreign income and remittances advised on', 'Foreign assets and income reported correctly', 'A yearly tax plan reviewed with you']
+    ];
+    var IND_DET = [
+      ['Advance tax computation and quarterly estimates', 'Savings and investment exemption guidance', 'Help if a notice or refund query comes up'],
+      ['Capital gains and investment exemption guidance', 'Advance tax computation and quarterly estimates', 'Rent, interest and dividend income review', 'Help if a notice or refund query comes up'],
+      ['Yearly tax planning for a higher income', 'Foreign income and NRI remittance advisory', 'Capital gains and investment exemption guidance', 'Advance tax computation and quarterly estimates', 'Help if a notice or refund query comes up'],
+      ['Foreign assets and income reporting', 'Yearly tax plan reviewed with you', 'Capital gains and investment planning', 'Advance tax computation and quarterly estimates', 'Foreign income and NRI remittance advisory', 'Help if a notice or refund query comes up']
+    ];
+    var CHECK = '<svg class="i"><use href="#i-check"/></svg>';
+    var TO = ['Up to \u20b920 L', '\u20b920 L \u2013 1 Cr', '\u20b91 \u2013 5 Cr', 'Over \u20b95 Cr'], SENT = ['up to \u20b920 L', '\u20b920 L \u2013 1 Cr', '\u20b91 \u2013 5 Cr', 'over \u20b95 Cr'];
+    var grid = $('.pk-grid'), card = $('.pk-result'), slider = form.elements.turnover, lastSig = '', lastFlow = 0;
+    var still = lite || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+    var fill = function (sel, items) {
+      var ul = $(sel); ul.textContent = '';
+      items.forEach(function (f, i) {
+        var li = document.createElement('li'); li.innerHTML = CHECK; li.style.setProperty('--i', i);   // position in the list, for the staggered fade-in
         var s = document.createElement('span'); s.textContent = f; li.appendChild(s); ul.appendChild(li);
       });
-      var label = function (n) { return form.querySelector('input[name="' + n + '"]:checked + span').textContent; };
-      $('#r-wa').href = 'https://wa.me/' + WA + '?text=' + encodeURIComponent(
-        'Greetings AJ Associates! I used the Packages section — business: ' + label('entity') +
-        ', turnover: ' + label('turnover') + '. I would like a quote for the "' + p[0] + '".');
-      $$('a[href*="contact"]', $('#r-wa').parentNode).forEach(function (a) { a.href = '/contact?from=packages~' + form.elements.entity.value + '~' + form.elements.turnover.value; });
     };
-    form.addEventListener('change', renderFinder);
+    var renderFinder = function () {
+      var ent = form.elements.entity.value, ti = +slider.value;
+      var kind = ent === 'proprietorship' ? 'prop' : ent;
+      var key = kind === 'prop' ? (ti === 0 ? 'prop_s' : 'prop_g') : kind;
+      var indiv = kind === 'individual';
+      var points = [LEAD[kind]].concat(indiv ? IND_PTS[ti] : BIZ_PTS[ti]);
+      var feats = BASE[kind].concat(indiv ? IND_DET[ti] : BIZ_DET[ti]);
+      var entLabel = form.elements.entity.selectedOptions[0].textContent;
+      slider.style.setProperty('--p', (ti * 100 / 3) + '%');
+      slider.setAttribute('aria-valuetext', SENT[ti]);
+      if (grid) grid.setAttribute('data-tone', key);        // each business type has its own tone, on the card and on the slider
+      $('#t-val').textContent = SENT[ti];
+      $('#pk-pre').textContent = indiv ? 'I am an' : 'I run a';       // the sentence reads naturally for each type
+      $('#pk-word').textContent = indiv ? 'income' : 'turnover';
+      $('#r-name').textContent = NAME[key];
+      $('#r-who').textContent = WHO[key];
+      fill('#r-three', points);
+      if (card) card.style.setProperty('--n', points.length);       // the button follows after the last point
+      fill('#r-list', feats);
+      $('#r-wa').setAttribute('data-journey', 'Packages: ' + entLabel + ', ' + TO[ti]);
+      $('#r-wa').href = 'https://wa.me/' + WA + '?text=' + encodeURIComponent(
+        'Greetings AJ Associates! I used the Packages section. Business: ' + entLabel +
+        ', turnover: ' + TO[ti] + '. I would like a quote for the "' + NAME[key] + '".');
+      var sig = kind + '|' + ti, now2 = Date.now();
+      if (lastSig && sig !== lastSig && card && !still && now2 - lastFlow > 380) {   // the text flows in piece by piece; dragging the slider quickly doesn't restart it each step
+        card.classList.remove('pk-flow'); void card.offsetWidth; card.classList.add('pk-flow'); lastFlow = now2;
+      }
+      lastSig = sig;
+    };
+    form.addEventListener('input', renderFinder);        // the slider fires "input" as it moves
+    form.addEventListener('change', renderFinder);       // the styled dropdown reports a "change"
     renderFinder();
   }
 
@@ -647,6 +688,36 @@
     });
     if (new RegExp('[?&]sent=' + (key || '1') + '(&|$)').test(location.search)) $('.msg', form).textContent = okMsg;
   };
+  /* ---- the path through the site: kept for this visit only, and sent with a contact form so we know how the visitor got there ----
+     (each page is noted, and so is any choice marked data-journey, such as "starting a business") */
+  var TRAIL = 'aj-trail';
+  var trailRead = function () { try { return JSON.parse(sessionStorage.getItem(TRAIL) || '[]'); } catch (e) { return []; } };
+  var trailAdd = function (label) {
+    var t = trailRead();
+    if (t[t.length - 1] === label) return;
+    t.push(label);
+    try { sessionStorage.setItem(TRAIL, JSON.stringify(t.slice(-12))); } catch (e) {}
+  };
+  trailAdd('Page: ' + (location.pathname.replace(/^\/|\/$/g, '') || 'home'));
+  // the trail in words, for the notification email: "Home page \u2192 Chose: starting a business \u2192 Contact page"
+  var PAGE_NAMES = { home: 'Home', services: 'Services', packages: 'Packages', about: 'About us', collab: 'Collab with us', careers: 'Careers', contact: 'Contact', faq: 'FAQs', resources: 'Resources', updates: 'Updates',
+    'starting-a-business': 'Starting a business', 'business-owners': 'For business owners', privacy: 'Privacy policy', terms: 'Terms and conditions' };
+  var SERVICE_NAMES = { taxation: 'Tax, GST & Compliance', 'company-formation': 'Business Registration', 'financial-management': 'Accounts & Audit', 'corporate-secretarial': 'Company Secretarial Work',
+    'lending-capital': 'Bank Loans & Funding', 'business-strategy': 'Business Advice & Restructuring', 'staffing-support': 'Accounting Staff & Support' };
+  var trailText = function () {
+    return trailRead().map(function (t) {
+      var m = /^Page: (.*)$/.exec(t);
+      if (!m) return t;
+      var p = m[1], s = /^services\/(.+)$/.exec(p);
+      if (s) return 'Service page: ' + (SERVICE_NAMES[s[1]] || s[1].replace(/-/g, ' '));
+      return (PAGE_NAMES[p] || p.replace(/-/g, ' ')) + ' page';
+    }).join(' \u2192 ');
+  };
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest && e.target.closest('[data-journey]');
+    if (el) trailAdd(el.getAttribute('data-journey'));
+  });
+
   /* ---- where a visitor came from: saved quietly and sent with the contact forms, just for us ----
      (?from= on our own buttons, utm_ tags from campaign links. Empty means the menu or a direct visit) */
   (function () {
@@ -671,6 +742,7 @@
       if (f.elements.source) f.elements.source.value = read('aj-from');
       if (f.elements.referrer) f.elements.referrer.value = read('aj-ref');
       if (f.elements.campaign) f.elements.campaign.value = read('aj-camp');
+      if (f.elements.journey) f.elements.journey.value = trailText();
     });
     if (from && window.history && history.replaceState) {        // clean up the address bar
       q.delete('from');

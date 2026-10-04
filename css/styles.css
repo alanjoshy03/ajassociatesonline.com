@@ -986,11 +986,10 @@ h1.h2 { letter-spacing: -.02em; }
 .cs-invalid .cs-btn { border-color: #a4361f; }
 .cs-list { position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 40; margin: 0; padding: .3rem; list-style: none; max-height: 22rem; overflow-y: auto; scrollbar-width: none; background: #fff; border: 0; border-top: 3px solid var(--brass); box-shadow: 0 18px 30px -14px rgba(11, 21, 38, .45); animation: csIn .16s ease-out; }
 .cs-up .cs-list { top: auto; bottom: calc(100% + 6px); }
-.cs-opt { position: relative; padding: .7rem .9rem .7rem 1.15rem; font-size: .95rem; line-height: 1.35; color: var(--ink); cursor: pointer; }
+.cs-opt { position: relative; padding: .7rem .9rem .7rem 1rem; font-size: .95rem; line-height: 1.35; color: var(--ink); cursor: pointer; }
 .cs-opt[data-empty] { color: var(--muted); }
 .cs-opt.cs-act { background: var(--paper-2); }
 .cs-opt[aria-selected="true"] { font-weight: 650; color: var(--navy); }
-.cs-opt[aria-selected="true"]::before { content: ""; position: absolute; left: .2rem; top: .6rem; bottom: .6rem; width: 3px; background: var(--brass); transform: skewX(-14deg); }
 .fit .cs-btn { min-height: 44px; padding-top: .6rem; padding-bottom: .6rem; }
 @keyframes csIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .cs-list { animation: none; } .cs-btn::after { transition: none; } }
@@ -1080,7 +1079,6 @@ a, button, summary, label, input, select, textarea { touch-action: manipulation;
 }
 
 /* phones: a clean cream hero, without the darker diagonal on the right (desktop keeps it) */
-@media (max-width: 899px) { .hero::before { display: none; } }
 
 /* navbar tagline: darker and tighter so it reads clearly */
 .hdr .brand small { font-weight: 500; font-size: .66rem; letter-spacing: .06em; color: var(--ink-2); }
@@ -1201,7 +1199,7 @@ a[href^="mailto:"] { overflow-wrap: anywhere; }
 .chk-seeall:focus-visible { outline: 2px solid var(--brass); outline-offset: 4px; }
 @media print { .chk-all.fold { max-height: none !important; overflow: visible; } .chk-wrap::after, .chk-seeall { display: none !important; } }
 
-/* group links: a plain row under the heading */
+/* group links: a simple row under the heading */
 .chk-jump { margin: 1.6rem 0 0; }
 .chk-jump-in { display: flex; flex-wrap: wrap; gap: .5rem 1.6rem; font-size: .92rem; font-weight: 650; }
 .chk-jump a { color: var(--navy); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--brass); }
@@ -1318,3 +1316,104 @@ a[href^="mailto:"] { overflow-wrap: anywhere; }
 /* team on one screen: the text sits level with the middle of the two cards instead of leaving the lower left empty */
 .fit .team-grid { align-items: center; }
 .fit .team-side { position: static; }
+
+/* packages: one sentence on the left, the answer on the right */
+.pk-wrap { max-width: 72rem; }
+.pk .sec-head { margin-bottom: 2.4rem; }
+#pk-h { margin: 0 0 .8rem; }
+.pk-grid { display: grid; gap: 2.6rem; align-items: center; }
+@media (min-width: 1080px) { .pk-grid { grid-template-columns: 5fr 7fr; gap: 4rem; } }
+.pk-say { container-type: inline-size; }
+.pk-sentence { margin: 0 0 1.8rem; font: 600 clamp(1.3rem, 2.4vw, 2rem)/1.6 var(--serif); letter-spacing: -.005em; color: var(--ink); }
+/* size the sentence from the width of its own column, so each line stays on one line on any screen */
+@supports (width: 1cqw) { .pk-sentence { font-size: clamp(1.1rem, 7cqw, 2.2rem); } }
+.pk-sel { display: inline-block; position: relative; }
+.pk-sel select { font: inherit; letter-spacing: inherit; color: var(--blue); background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23b4884a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right .1rem center / .8rem; border: 0; border-bottom: 2px solid var(--brass); border-radius: 0; padding: 0 1.4rem .05rem .1rem; margin: 0; cursor: pointer; -webkit-appearance: none; appearance: none; max-width: 100%; }
+.pk-sel select:hover { border-bottom-color: var(--ink); }
+.pk-sel select:focus-visible { outline: 3px solid var(--brass); outline-offset: 4px; }
+.pk-sel select option { font: 400 1rem var(--sans); color: var(--ink); }
+.pk-sentence .ln { display: block; white-space: nowrap; }
+.pk-val { font-weight: 600; color: var(--blue); white-space: nowrap; }
+#pk-h { font-size: clamp(2rem, 3.4vw, 2.7rem); }
+/* turnover slider */
+.pk-range { position: relative; height: 1.8rem; }
+.pk-ticks { position: absolute; left: 0; right: 0; top: 50%; display: flex; justify-content: space-between; padding: 0 .8rem; transform: translateY(-50%); pointer-events: none; }
+.pk-ticks i { width: 1px; height: .55rem; margin: 0 -.5px; background: rgba(11, 21, 38, .22); }
+.pk-range input::-webkit-slider-runnable-track { height: 2px; border-radius: 2px; background: linear-gradient(to right, var(--tone, var(--navy)) var(--p, 0%), rgba(11, 21, 38, .16) var(--p, 0%)); }
+.pk-range input::-moz-range-track { height: 2px; border-radius: 2px; background: linear-gradient(to right, var(--tone, var(--navy)) var(--p, 0%), rgba(11, 21, 38, .16) var(--p, 0%)); }
+.pk-range input::-webkit-slider-thumb { -webkit-appearance: none; width: 1.5rem; height: 1.5rem; margin-top: calc(-.75rem + 1px); border-radius: 50%; border: 1.5px solid var(--tone, var(--navy)); background: radial-gradient(circle, var(--brass) 0 26%, var(--paper) 30%); box-shadow: 0 2px 8px rgba(11, 21, 38, .18); transition: transform .15s ease; }
+.pk-range input::-moz-range-thumb { width: 1.5rem; height: 1.5rem; border-radius: 50%; border: 1.5px solid var(--tone, var(--navy)); background: radial-gradient(circle, var(--brass) 0 26%, var(--paper) 30%); box-shadow: 0 2px 8px rgba(11, 21, 38, .18); box-sizing: border-box; transition: transform .15s ease; }
+.pk-range input:hover::-webkit-slider-thumb, .pk-range input:active::-webkit-slider-thumb { transform: scale(1.1); }
+.pk-range input:hover::-moz-range-thumb, .pk-range input:active::-moz-range-thumb { transform: scale(1.1); }
+.pk-range input { position: relative; width: 100%; height: 1.8rem; margin: 0; background: transparent; -webkit-appearance: none; appearance: none; cursor: pointer; }
+.pk-range input:focus { outline: none; }
+.pk-range input:focus-visible::-webkit-slider-thumb { outline: 3px solid var(--brass); outline-offset: 3px; }
+.pk-range input:focus-visible::-moz-range-thumb { outline: 3px solid var(--brass); outline-offset: 3px; }
+.pk-ends { display: flex; justify-content: space-between; margin-top: .6rem; font-size: .8rem; letter-spacing: .02em; color: var(--muted); }
+/* the answer */
+.pk-result { margin: 0; padding: clamp(1.7rem, 3vw, 2.3rem) clamp(1.7rem, 3.4vw, 2.5rem); box-shadow: none; }
+.pk-result h3 { text-wrap: balance; margin: 0 0 .6rem; font-size: clamp(1.7rem, 3.4vw, 2.3rem); line-height: 1.15; }
+.pk-result .who { margin: 0 0 1.3rem; max-width: 34rem; font-size: 1rem; color: rgba(246, 242, 234, .85); }
+.pk-three { margin: 0 0 1.7rem; }
+.pk-three li { padding: .62rem 0; font-size: 1.03rem; color: var(--paper); }
+.pk-three li:last-child { border-bottom: 1px solid var(--line-l); }
+.pk-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.6rem; }
+.pk-assure { margin: 0; font-size: .92rem; color: rgba(246, 242, 234, .8); }
+.pk-more { margin-top: 1.4rem; }
+.pk-more summary { display: inline-flex; align-items: center; gap: .6rem; cursor: pointer; list-style: none; color: var(--paper); font-size: .95rem; }
+.pk-more summary span { text-decoration: underline; text-decoration-color: var(--brass); text-underline-offset: 4px; }
+.pk-more summary::-webkit-details-marker { display: none; }
+.pk-more summary::after { content: "+"; font-size: 1.2rem; line-height: 1; color: var(--brass); }
+.pk-more[open] summary::after { content: "\2212"; }
+.pk-more ul { margin: 1rem 0 0; }
+.pk-more li { padding: .75rem 0; font-size: .95rem; }
+
+/* packages on laptops: less space above, so the sentence and the answer fit one screen */
+@media (min-width: 900px) {
+  .sec.pk { padding-top: 4.5rem; padding-bottom: 4rem; }
+  .pk .sec-head { margin-bottom: 2rem; }
+  .pk-result { padding-top: 1.9rem; padding-bottom: 1.9rem; }
+  .pk .sec-head p { max-width: none; }
+}
+
+/* the business-type dropdown inside the sentence: the site's own styled list, no boxed outline */
+.pk-sel .cs { display: inline-block; position: relative; }
+.pk-sel .cs-btn { width: auto; min-height: 0; padding: 0 1.45rem .05rem .1rem; font: inherit; letter-spacing: inherit; color: var(--blue); background: transparent; border: 0; border-bottom: 2px solid var(--brass); border-radius: 0; box-shadow: none; transition: border-color .2s, background-color .2s; }
+.pk-sel .cs-btn:hover { border-bottom-color: var(--ink); }
+.pk-sel .cs-btn:focus-visible, .pk-sel .cs.open .cs-btn { outline: none; box-shadow: none; border-bottom-color: var(--ink); background: rgba(180, 136, 74, .14); }
+.pk-sel .cs-btn::after { right: .15rem; width: .42rem; height: .42rem; border-color: var(--brass); }
+.pk-sel .cs-list { left: -.4rem; right: auto; min-width: 15.5rem; top: calc(100% + .8rem); padding: .35rem; font: 400 1rem/1.35 var(--sans); letter-spacing: 0; text-align: left; white-space: nowrap; box-shadow: 0 18px 34px -18px rgba(11, 21, 38, .45); }
+.pk-sel .cs-opt { padding: .75rem 1rem; }
+
+/* when the choice changes, the answer's text flows in piece by piece: title, line, the three points, then the button */
+@keyframes pkFlow { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.pk-flow h3, .pk-flow .who, .pk-flow .pk-three li, .pk-flow .pk-cta, .pk-flow .pk-more { animation: pkFlow .5s cubic-bezier(.22, .61, .36, 1) both; }
+.pk-flow .who { animation-delay: .07s; }
+
+/* each business type gets its own tone from the site palette (ink, navy, slate, grey-navy, dark bronze), all kept dark so none looks brighter than the rest; it colours the answer card and the slider */
+.pk-grid[data-tone="prop_s"] { --tone: var(--ink); }
+.pk-grid[data-tone="prop_g"] { --tone: var(--navy); }
+.pk-grid[data-tone="partnership"] { --tone: var(--ink-2); }
+.pk-grid[data-tone="pvt_ltd"] { --tone: #1a2d4a; }
+.pk-grid[data-tone="individual"] { --tone: #2e2211; }
+.pk-result { background-color: var(--tone, var(--ink)); transition: background-color .6s ease; }
+@media (prefers-reduced-motion: reduce) { .pk-result { transition: none; } }
+.lite .pk-result { transition: none; }
+
+
+.pk-flow .pk-three li { animation-delay: calc(.15s + var(--i, 0) * .08s); }
+.pk-flow .pk-cta { animation-delay: calc(.2s + var(--n, 3) * .08s); }
+.pk-flow .pk-more { animation-delay: calc(.26s + var(--n, 3) * .08s); }
+
+
+/* the gap between the heading and the choices / answer follows the screen's height too: snug on a short screen, roomy on a tall one */
+@media (min-width: 1080px) { .pk .sec-head { margin-bottom: clamp(2rem, calc((100vh - 640px) / 4), 6.5rem); } }
+
+/* on wide screens the first view is one screen high and the heading stays put: its distance from the top depends only on the window's height (never on the answer's length), so it doesn't move as the slider changes the card; the next section starts below the fold */
+@media (min-width: 1080px) {
+  .sec.pk { min-height: min(calc(100vh - var(--hdr)), 64rem); padding-top: clamp(2.5rem, calc(40px + (100vh - 784px) * .37), 9rem); padding-bottom: 2.5rem; }
+}
+
+/* on wide screens the sentence and slider stay where they are while the answer grows, so the slider never moves under the finger */
+@media (min-width: 1080px) { .pk-grid { align-items: start; } .pk-say { padding-top: 8rem; } }
+@media (max-width: 899px) { .hero::before { display: none; } }

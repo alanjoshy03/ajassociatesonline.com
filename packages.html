@@ -22,7 +22,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 
-<link rel="preload" href="/css/styles.css?v=237" as="style">
+<link rel="preload" href="/css/styles.css?v=285" as="style">
 <link rel="preload" href="/assets/fonts/playfair.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
 <script>
@@ -32,8 +32,8 @@
     if ((n.connection && n.connection.saveData) || (n.deviceMemory && n.deviceMemory <= 2) || (n.hardwareConcurrency && n.hardwareConcurrency <= 2)) c.add('lite');
   })(document, navigator);
 </script>
-<link rel="stylesheet" href="/css/styles.css?v=237">
-<script src="/js/app.js?v=237" defer fetchpriority="high"></script>
+<link rel="stylesheet" href="/css/styles.css?v=285">
+<script src="/js/app.js?v=285" defer fetchpriority="high"></script>
 <script>
   /* First page of a visit only, and never on low-end / save-data / reduced-motion devices. */
   (function (d, n, w) {
@@ -125,56 +125,52 @@
 
 <main id="main">
 
-<section class="sec fit-me" id="packages">
-  <div class="wrap">
+<section class="sec pk" id="packages" aria-labelledby="pk-h">
+  <div class="wrap pk-wrap">
     <div class="sec-head rv">
-      <p class="eyebrow">Packages</p>
-      <h1 class="h2">Choose what your business <em>needs.</em></h1>
-      <p>What we usually suggest for a business like yours, by type and turnover. It is only a rough guide, and we agree the final work and the fee with you before anything starts.</p>
+      <h1 class="h2" id="pk-h">Choose what your business <em>needs.</em></h1>
+      <p>Pick your business type and your turnover, and you will see what we usually suggest.</p>
     </div>
-    <div class="finder-grid">
-      <form class="rv" id="finder">
-        <fieldset>
-          <legend>1 · Business type</legend>
-          <div class="chips">
-            <label class="chip"><input type="radio" name="entity" value="proprietorship" checked><span>Proprietorship</span></label>
-            <label class="chip"><input type="radio" name="entity" value="partnership"><span>Partnership / LLP</span></label>
-            <label class="chip"><input type="radio" name="entity" value="pvt_ltd"><span>Pvt Ltd company</span></label>
-            <label class="chip"><input type="radio" name="entity" value="individual"><span>Individual / NRI</span></label>
-          </div>
-        </fieldset>
-        <fieldset>
-          <legend>2 · Annual turnover / income</legend>
-          <div class="chips">
-            <label class="chip"><input type="radio" name="turnover" value="under_20l" checked><span>Below ₹20 L</span></label>
-            <label class="chip"><input type="radio" name="turnover" value="20l_50l"><span>₹20 – 50 L</span></label>
-            <label class="chip"><input type="radio" name="turnover" value="50l_1cr"><span>₹50 L – 1 Cr</span></label>
-            <label class="chip"><input type="radio" name="turnover" value="1cr_5cr"><span>₹1 – 5 Cr</span></label>
-            <label class="chip"><input type="radio" name="turnover" value="above_5cr"><span>Above ₹5 Cr</span></label>
-          </div>
-        </fieldset>
-        <p class="note">Just a guide. What you actually need depends on your own situation and the law as it stands.</p>
-        <figure class="art art-side"><img src="/assets/art-packages.webp" width="640" height="529" loading="lazy" decoding="async" alt="Three document folders in rising sizes with checklists, beside a calculator, a pen, coins and a clipboard, sketched in watercolour"></figure>
-      </form>
 
-      <div class="result rv" aria-live="polite">
-        <span class="pill" id="r-tier">For small businesses</span>
-        <h3 id="r-name" aria-level="2">Small business (proprietorship)</h3>
-        <p class="who" id="r-who">For a small business or sole trader who needs the basics done properly.</p>
-        <ul id="r-list">
-          <li><svg class="i"><use href="#i-check"/></svg><span>Annual Income Tax Return (ITR-3/4 presumptive) filing</span></li>
-          <li><svg class="i"><use href="#i-check"/></svg><span>Financial statements (P&amp;L and balance sheet)</span></li>
-          <li><svg class="i"><use href="#i-check"/></svg><span>Form 26AS / AIS reconciliation and TDS claiming</span></li>
-          <li><svg class="i"><use href="#i-check"/></svg><span>Advance tax computation and payment schedule advice</span></li>
-          <li><svg class="i"><use href="#i-check"/></svg><span>MSME / Udyam registration and compliance support</span></li>
-          <li><svg class="i"><use href="#i-check"/></svg><span>Bank statement reconciliation and ledger review</span></li>
-        </ul>
-        <p class="oversight">We review every file before it goes out, and we deal with it if the department asks questions.</p>
-        <div class="cta-row">
-          <a class="btn btn-brass btn-sm" id="r-wa" href="/contact?from=packages~packages">Get a quote <svg class="i"><use href="#i-arrow"/></svg></a>
-          <a class="btn btn-ghost btn-sm" href="/contact?from=packages~packages">Send an enquiry</a>
-        </div>
+    <div class="pk-grid" data-tone="partnership">
+    <form class="pk-say rv" id="finder">
+      <p class="pk-sentence">
+        <span class="ln"><span id="pk-pre">I run a</span>
+        <span class="pk-sel"><select name="entity" aria-label="Your business type">
+          <option value="proprietorship">Proprietorship</option>
+          <option value="partnership" selected>Partnership / LLP</option>
+          <option value="pvt_ltd">Pvt Ltd company</option>
+          <option value="individual">Individual / NRI</option>
+        </select></span></span>
+        <span class="ln">with a yearly <span id="pk-word">turnover</span> of</span>
+        <strong class="ln pk-val" id="t-val">₹20 – 50 L</strong>
+      </p>
+      <div class="pk-range">
+        <div class="pk-ticks" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <input type="range" name="turnover" min="0" max="3" step="1" value="1" style="--p:33.333%" aria-label="Annual turnover or income" aria-valuetext="₹20 L – 1 Cr">
       </div>
+      <div class="pk-ends" aria-hidden="true"><span>Up to ₹20 L</span><span>Over ₹5 Cr</span></div>
+    </form>
+
+    <div class="pk-right rv">
+    <div class="result pk-result" aria-live="polite">
+      <h3 id="r-name" aria-level="2">Partnership or LLP</h3>
+      <p class="who" id="r-who">For partnership firms and LLPs that file regularly and share profits between partners.</p>
+      <ul class="pk-three" id="r-three">
+        <li><svg class="i"><use href="#i-check"/></svg><span>Your firm’s yearly filings done</span></li><li><svg class="i"><use href="#i-check"/></svg><span>Your accounts and statements in order</span></li><li><svg class="i"><use href="#i-check"/></svg><span>GST registration and monthly returns</span></li><li><svg class="i"><use href="#i-check"/></svg><span>Books checked against your GST data</span></li>
+      </ul>
+      <div class="pk-cta">
+        <a class="btn btn-brass" id="r-wa" href="/contact?from=packages~packages">Get a quote <svg class="i"><use href="#i-arrow"/></svg></a>
+        <p class="pk-assure">Any fee is agreed with you first.</p>
+      </div>
+      <details class="pk-more">
+        <summary><span>See everything included</span></summary>
+        <ul id="r-list">
+          <li><svg class="i"><use href="#i-check"/></svg><span>LLP annual filings with the Registrar (Form 11 and Form 8)</span></li><li><svg class="i"><use href="#i-check"/></svg><span>Partner capital accounts and profit distribution</span></li><li><svg class="i"><use href="#i-check"/></svg><span>Form 26AS / AIS reconciliation and advance tax advice</span></li><li><svg class="i"><use href="#i-check"/></svg><span>GST registration and monthly returns (GSTR-1, GSTR-3B)</span></li><li><svg class="i"><use href="#i-check"/></svg><span>GSTR-2B matching and input credit verification</span></li><li><svg class="i"><use href="#i-check"/></svg><span>Advance tax computation and payment schedule advice</span></li><li><svg class="i"><use href="#i-check"/></svg><span>Bookkeeping and ledger supervision</span></li>
+        </ul>
+      </details>
+    </div>
+    </div>
     </div>
   </div>
 </section>
@@ -183,7 +179,7 @@
 <section class="sec gd" aria-labelledby="pk-price">
   <div class="wrap gd-wrap">
     <h2 id="pk-price" class="rv">Priced around your business</h2>
-    <p class="gd-lead rv">There is no fixed price list, because no two businesses need the same work. Your fee depends on what you need done, your turnover and how many transactions you have. We recommend only what you actually need, and we tell you the fee in writing before we start.</p>
+    <p class="gd-lead rv">There is no fixed price list, because no two businesses need the same work. Your fee depends on what you need done, your turnover and how many transactions you have. We recommend only what you actually need, and the fee is always agreed with you before we start.</p>
     <p class="gd-lead rv">You can also begin small. Many clients start with a single service, such as a registration or a return, and add more later if they want to. <a href="/contact?from=packages~page">Tell us about your business</a> and we will send you a clear figure.</p>
   </div>
 </section>

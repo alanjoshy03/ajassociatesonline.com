@@ -1,53 +1,49 @@
-<section class="sec" id="packages">
-  <div class="wrap">
+<section class="sec pk" id="packages" aria-labelledby="pk-h">
+  <div class="wrap pk-wrap">
     <div class="sec-head rv">
-      <p class="eyebrow">Packages</p>
-      <h2>Choose what your business <em>needs.</em></h2>
-      <p>What we usually suggest for a business like yours, by type and turnover. It is only a rough guide, and we agree the final work and the fee with you before anything starts.</p>
+      <h2 id="pk-h">Choose what your business <em>needs.</em></h2>
+      <p>Pick your business type and your turnover, and you will see what we usually suggest.</p>
     </div>
-    <div class="finder-grid">
-      <form class="rv" id="finder">
-        <fieldset>
-          <legend>1 · Business type</legend>
-          <div class="chips">
-            <label class="chip"><input type="radio" name="entity" value="proprietorship" checked><span>Proprietorship</span></label>
-            <label class="chip"><input type="radio" name="entity" value="partnership"><span>Partnership / LLP</span></label>
-            <label class="chip"><input type="radio" name="entity" value="pvt_ltd"><span>Pvt Ltd company</span></label>
-            <label class="chip"><input type="radio" name="entity" value="individual"><span>Individual / NRI</span></label>
-          </div>
-        </fieldset>
-        <fieldset>
-          <legend>2 · Annual turnover / income</legend>
-          <div class="chips">
-            <label class="chip"><input type="radio" name="turnover" value="under_20l" checked><span>Below ₹20 L</span></label>
-            <label class="chip"><input type="radio" name="turnover" value="20l_50l"><span>₹20 – 50 L</span></label>
-            <label class="chip"><input type="radio" name="turnover" value="50l_1cr"><span>₹50 L – 1 Cr</span></label>
-            <label class="chip"><input type="radio" name="turnover" value="1cr_5cr"><span>₹1 – 5 Cr</span></label>
-            <label class="chip"><input type="radio" name="turnover" value="above_5cr"><span>Above ₹5 Cr</span></label>
-          </div>
-        </fieldset>
-        <p class="note">Just a guide. What you actually need depends on your own situation and the law as it stands.</p>
-        <figure class="art art-side"><img src="assets/art-packages.webp" width="640" height="529" loading="lazy" decoding="async" alt="Three document folders in rising sizes with checklists, beside a calculator, a pen, coins and a clipboard, sketched in watercolour"></figure>
-      </form>
 
-      <div class="result rv" aria-live="polite">
-        <span class="pill" id="r-tier">For small businesses</span>
-        <h3 id="r-name">Small business (proprietorship)</h3>
-        <p class="who" id="r-who">For a small business or sole trader who needs the basics done properly.</p>
-        <ul id="r-list">
-          <li><svg class="i"><use href="#i-check"/></svg><span>Annual Income Tax Return (ITR-3/4 presumptive) filing</span></li>
-          <li><svg class="i"><use href="#i-check"/></svg><span>Financial statements (P&amp;L and balance sheet)</span></li>
-          <li><svg class="i"><use href="#i-check"/></svg><span>Form 26AS / AIS reconciliation and TDS claiming</span></li>
-          <li><svg class="i"><use href="#i-check"/></svg><span>Advance tax computation and payment schedule advice</span></li>
-          <li><svg class="i"><use href="#i-check"/></svg><span>MSME / Udyam registration and compliance support</span></li>
-          <li><svg class="i"><use href="#i-check"/></svg><span>Bank statement reconciliation and ledger review</span></li>
-        </ul>
-        <p class="oversight">We review every file before it goes out, and we deal with it if the department asks questions.</p>
-        <div class="cta-row">
-          <a class="btn btn-brass btn-sm" id="r-wa" href="#contact">Get a quote <svg class="i"><use href="#i-arrow"/></svg></a>
-          <a class="btn btn-ghost btn-sm" href="#contact">Send an enquiry</a>
-        </div>
+    <div class="pk-grid" data-tone="partnership">
+    <form class="pk-say rv" id="finder">
+      <p class="pk-sentence">
+        <span class="ln"><span id="pk-pre">I run a</span>
+        <span class="pk-sel"><select name="entity" aria-label="Your business type">
+          <option value="proprietorship">Proprietorship</option>
+          <option value="partnership" selected>Partnership / LLP</option>
+          <option value="pvt_ltd">Pvt Ltd company</option>
+          <option value="individual">Individual / NRI</option>
+        </select></span></span>
+        <span class="ln">with a yearly <span id="pk-word">turnover</span> of</span>
+        <strong class="ln pk-val" id="t-val">₹20 – 50 L</strong>
+      </p>
+      <div class="pk-range">
+        <div class="pk-ticks" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <input type="range" name="turnover" min="0" max="3" step="1" value="1" style="--p:33.333%" aria-label="Annual turnover or income" aria-valuetext="₹20 L – 1 Cr">
       </div>
+      <div class="pk-ends" aria-hidden="true"><span>Up to ₹20 L</span><span>Over ₹5 Cr</span></div>
+    </form>
+
+    <div class="pk-right rv">
+    <div class="result pk-result" aria-live="polite">
+      <h3 id="r-name">Partnership or LLP</h3>
+      <p class="who" id="r-who">For partnership firms and LLPs that file regularly and share profits between partners.</p>
+      <ul class="pk-three" id="r-three">
+        <li><svg class="i"><use href="#i-check"/></svg><span>Your firm’s yearly filings done</span></li><li><svg class="i"><use href="#i-check"/></svg><span>Your accounts and statements in order</span></li><li><svg class="i"><use href="#i-check"/></svg><span>GST registration and monthly returns</span></li><li><svg class="i"><use href="#i-check"/></svg><span>Books checked against your GST data</span></li>
+      </ul>
+      <div class="pk-cta">
+        <a class="btn btn-brass" id="r-wa" href="#contact">Get a quote <svg class="i"><use href="#i-arrow"/></svg></a>
+        <p class="pk-assure">Any fee is agreed with you first.</p>
+      </div>
+      <details class="pk-more">
+        <summary><span>See everything included</span></summary>
+        <ul id="r-list">
+          <li><svg class="i"><use href="#i-check"/></svg><span>LLP annual filings with the Registrar (Form 11 and Form 8)</span></li><li><svg class="i"><use href="#i-check"/></svg><span>Partner capital accounts and profit distribution</span></li><li><svg class="i"><use href="#i-check"/></svg><span>Form 26AS / AIS reconciliation and advance tax advice</span></li><li><svg class="i"><use href="#i-check"/></svg><span>GST registration and monthly returns (GSTR-1, GSTR-3B)</span></li><li><svg class="i"><use href="#i-check"/></svg><span>GSTR-2B matching and input credit verification</span></li><li><svg class="i"><use href="#i-check"/></svg><span>Advance tax computation and payment schedule advice</span></li><li><svg class="i"><use href="#i-check"/></svg><span>Bookkeeping and ledger supervision</span></li>
+        </ul>
+      </details>
+    </div>
+    </div>
     </div>
   </div>
 </section>
