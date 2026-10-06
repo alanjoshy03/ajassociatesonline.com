@@ -115,10 +115,10 @@ h2 { font-size: clamp(1.95rem, 4.3vw, 3rem); }
 }
 
 /* hero */
-.hero { position: relative; padding: clamp(4.5rem, 11vw, 10rem) 0 clamp(8rem, 16vw, 14rem); overflow: hidden; }
+.hero { position: relative; padding: clamp(4.5rem, 11vw, 10rem) 0 clamp(8rem, 16vw, 14rem); overflow: hidden; background: #fcfbf9; }
 .hero::before { /* diagonal, echoes the logo strokes */
   content: ""; position: absolute; right: -8%; top: 0; bottom: 0; width: 46%;
-  background: var(--paper-2); clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%); z-index: 0;
+  background: #f5f3ee; clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%); z-index: 0;
 }
 .hero-grid { position: relative; z-index: 1; display: grid; gap: 4.5rem; align-items: start; }
 .hero h1 { margin: 1.8rem 0 2rem; }
