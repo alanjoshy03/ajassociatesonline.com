@@ -1,0 +1,119 @@
+# one address only: ajassociatesonline.com
+# (also make it the primary domain in Netlify, so the netlify.app address redirects here too)
+http://www.ajassociatesonline.com/*   https://ajassociatesonline.com/:splat   301!
+https://www.ajassociatesonline.com/*  https://ajassociatesonline.com/:splat   301!
+http://ajassociatesonline.com/*       https://ajassociatesonline.com/:splat   301!
+
+# the accessibility page was folded into the terms
+/accessibility       /terms   301!
+/accessibility.html  /terms   301!
+/accessibility/      /terms   301!
+
+# home is just the domain, never /index.html
+/index.html   /   301!
+
+# the error page file sits in /pages/, and the old addresses of the icons and the manifest still work
+/error               /pages/error.html   200
+/error.html          /error              301!
+/pages/error.html    /error              301!
+/favicon-32.png      /assets/icons/favicon-32.png     301!
+/icon-192.png        /assets/icons/icon-192.png       301!
+/icon-512.png        /assets/icons/icon-512.png       301!
+/site.webmanifest    /assets/icons/site.webmanifest   301!
+
+# drop the trailing slash (/about/ to /about) so css and images still load
+/pages/services/ /pages/services 301!
+/services/taxation/ /services/taxation 301!
+/services/company-formation/ /services/company-formation 301!
+/services/financial-management/ /services/financial-management 301!
+/services/corporate-secretarial/ /services/corporate-secretarial 301!
+/services/lending-capital/ /services/lending-capital 301!
+/services/business-strategy/ /services/business-strategy 301!
+/services/staffing-support/ /services/staffing-support 301!
+/services/ca-certification/ /services/ca-certification 301!
+/pages/packages/ /pages/packages 301!
+/pages/about/ /pages/about 301!
+/pages/collab/ /pages/collab 301!
+/pages/careers/ /pages/careers 301!
+/pages/contact/ /pages/contact 301!
+/pages/faq/ /pages/faq 301!
+/pages/resources/ /pages/resources 301!
+/pages/updates/ /pages/updates 301!
+/pages/starting-a-business/ /pages/starting-a-business 301!
+/pages/business-owners/ /pages/business-owners 301!
+/pages/privacy/ /pages/privacy 301!
+/pages/terms/ /pages/terms 301!
+/services.html /pages/services 301!
+/service-taxation.html /services/taxation 301!
+/service-company-formation.html /services/company-formation 301!
+/service-financial-management.html /services/financial-management 301!
+/service-corporate-secretarial.html /services/corporate-secretarial 301!
+/service-lending-capital.html /services/lending-capital 301!
+/service-business-strategy.html /services/business-strategy 301!
+/service-staffing-support.html /services/staffing-support 301!
+/service-ca-certification.html /services/ca-certification 301!
+/packages.html /pages/packages 301!
+/about.html /pages/about 301!
+/collab.html /pages/collab 301!
+/careers.html /pages/careers 301!
+/contact.html /pages/contact 301!
+/faq.html /pages/faq 301!
+/resources.html /pages/resources 301!
+/updates.html /pages/updates 301!
+/starting-a-business.html /pages/starting-a-business 301!
+/business-owners.html /pages/business-owners 301!
+/privacy.html /pages/privacy 301!
+/terms.html /pages/terms 301!
+/service-taxation /services/taxation 301!
+/services/taxation.html /services/taxation 301!
+/service-company-formation /services/company-formation 301!
+/services/company-formation.html /services/company-formation 301!
+/service-financial-management /services/financial-management 301!
+/services/financial-management.html /services/financial-management 301!
+/service-corporate-secretarial /services/corporate-secretarial 301!
+/services/corporate-secretarial.html /services/corporate-secretarial 301!
+/service-lending-capital /services/lending-capital 301!
+/services/lending-capital.html /services/lending-capital 301!
+/service-business-strategy /services/business-strategy 301!
+/services/business-strategy.html /services/business-strategy 301!
+/service-staffing-support /services/staffing-support 301!
+/services/staffing-support.html /services/staffing-support 301!
+/service-ca-certification /services/ca-certification 301!
+/services/ca-certification.html /services/ca-certification 301!
+/pages/services.html /pages/services 301!
+/pages/packages.html /pages/packages 301!
+/pages/about.html /pages/about 301!
+/pages/collab.html /pages/collab 301!
+/pages/careers.html /pages/careers 301!
+/pages/contact.html /pages/contact 301!
+/pages/faq.html /pages/faq 301!
+/pages/resources.html /pages/resources 301!
+/pages/updates.html /pages/updates 301!
+/pages/starting-a-business.html /pages/starting-a-business 301!
+/pages/business-owners.html /pages/business-owners 301!
+/pages/privacy.html /pages/privacy 301!
+/pages/terms.html /pages/terms 301!
+
+# clean addresses work when typed or shared, and the address bar stays as typed
+/pages/services                          /pages/services.html                      200
+/pages/packages                          /pages/packages.html                      200
+/pages/about                             /pages/about.html                         200
+/pages/collab                            /pages/collab.html                        200
+/pages/careers                           /pages/careers.html                       200
+/pages/contact                           /pages/contact.html                       200
+/pages/faq                               /pages/faq.html                           200
+/pages/resources                         /pages/resources.html                     200
+/pages/updates                           /pages/updates.html                       200
+/pages/starting-a-business               /pages/starting-a-business.html           200
+/pages/business-owners                   /pages/business-owners.html               200
+/pages/privacy                           /pages/privacy.html                       200
+/pages/terms                             /pages/terms.html                         200
+
+# keep source folders and config private
+/tools/*        /404.html   404!
+/_legacy/*      /404.html   404!
+/netlify.toml   /404.html   404!
+/.gitignore     /404.html   404!
+/_redirects     /404.html   404!
+
+# anything else that doesn't exist falls through to /404.html
