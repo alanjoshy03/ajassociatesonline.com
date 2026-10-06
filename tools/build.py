@@ -12,7 +12,7 @@ import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PART = os.path.join(ROOT, 'tools', 'partials')
-V = '327'   # bump this whenever css/js changes so browsers fetch the new files
+V = '329'   # bump this whenever css/js changes so browsers fetch the new files
 
 def part(name):
     with open(os.path.join(PART, name + '.html'), encoding='utf-8') as f:
@@ -166,7 +166,7 @@ def head(title, desc, extra='', canonical=None, robots=None):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
 <meta name="description" content="{desc}">
-<meta name="theme-color" content="#f7f6f2">
+<meta name="theme-color" content="#fdfdfb">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
 <meta property="og:type" content="website">
@@ -1025,7 +1025,7 @@ def write_deploy_files():
            "form-action 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'")
     w('.well-known/security.txt', f'Contact: mailto:{INFO}\nExpires: 2027-09-30T18:29:00.000Z\nPreferred-Languages: en\nCanonical: {SITE}/.well-known/security.txt\n')
     w('assets/icons/site.webmanifest', '{\n  "name": "AJ Associates",\n  "short_name": "AJ Associates",\n  "description": "Tax, audit and management consultancy in Kochi, Kerala",\n'
-      '  "start_url": "/",\n  "display": "browser",\n  "theme_color": "#f7f6f2",\n  "background_color": "#f7f6f2",\n'
+      '  "start_url": "/",\n  "display": "browser",\n  "theme_color": "#fdfdfb",\n  "background_color": "#fdfdfb",\n'
       '  "icons": [\n    {"src": "/assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png"},\n'
       '    {"src": "/assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}\n  ]\n}\n')
     urls = ''.join(f'  <url><loc>{SITE}{clean_path(p)}</loc></url>\n' for p in PAGES)
